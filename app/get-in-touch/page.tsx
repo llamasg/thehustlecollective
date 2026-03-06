@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
-// ── Animation variants ──
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
   visible: (delay: number) => ({
@@ -14,18 +12,6 @@ const fadeUp = {
     transition: {
       delay,
       duration: 0.7,
-      ease: [0.25, 0.46, 0.45, 0.94] as const,
-    },
-  }),
-};
-
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: (delay: number) => ({
-    opacity: 1,
-    transition: {
-      delay,
-      duration: 0.6,
       ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   }),
@@ -53,7 +39,34 @@ const staggerItem = {
   },
 };
 
-// ── Social link data ──
+const contacts = [
+  {
+    department: "General Enquiries",
+    email: "hello@thehustlecollective.com",
+    description: "For general questions, partnerships, and collaborations",
+  },
+  {
+    department: "Hockley Hustle",
+    email: "tommy@hockleyhustle.co.uk",
+    description: "Festival bookings, venues, and event enquiries",
+  },
+  {
+    department: "Young Hustlers",
+    email: "ben@hockleyhustle.co.uk",
+    description: "Youth programmes and education partnerships",
+  },
+  {
+    department: "Green Hustle",
+    email: "adam@greenhustle.co.uk",
+    description: "Sustainability initiatives and environmental projects",
+  },
+  {
+    department: "Hustle Cinematic",
+    email: "christine@thehustlecollective.com",
+    description: "Film, screenings, and cinematic events",
+  },
+];
+
 const socialLinks = [
   {
     label: "Instagram",
@@ -93,41 +106,13 @@ const socialLinks = [
   },
 ];
 
-// ── Component ──
 export default function GetInTouchPage() {
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [sending, setSending] = useState(false);
-
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }
-
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setSending(true);
-
-    // Simulate a network request
-    setTimeout(() => {
-      setSending(false);
-      setSubmitted(true);
-      setFormState({ name: "", email: "", message: "" });
-    }, 1200);
-  }
-
   return (
     <>
       <Navbar />
       <main className="bg-grey min-h-screen">
-        {/* ── Hero Section ── */}
+        {/* Hero */}
         <section className="relative overflow-hidden bg-black pt-32 pb-20 md:pt-40 md:pb-28">
-          {/* Decorative background asterisks */}
           <motion.span
             className="pointer-events-none absolute top-16 right-12 select-none text-blue/[0.07]"
             style={{ fontSize: "18rem", lineHeight: 1 }}
@@ -135,16 +120,6 @@ export default function GetInTouchPage() {
             initial={{ opacity: 0, rotate: -20 }}
             animate={{ opacity: 1, rotate: 0 }}
             transition={{ duration: 1.2, delay: 0.4, ease: "easeOut" }}
-          >
-            &#x2731;
-          </motion.span>
-          <motion.span
-            className="pointer-events-none absolute bottom-8 left-8 select-none text-blue/[0.08]"
-            style={{ fontSize: "10rem", lineHeight: 1 }}
-            aria-hidden="true"
-            initial={{ opacity: 0, rotate: 20 }}
-            animate={{ opacity: 1, rotate: 0 }}
-            transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
           >
             &#x2731;
           </motion.span>
@@ -182,298 +157,113 @@ export default function GetInTouchPage() {
               initial="hidden"
               animate="visible"
             >
-              We want to hear from you. Whether you&rsquo;re an artist, a venue,
-              a brand, a charity, or just someone who loves Nottingham
-              &mdash;&nbsp;let&rsquo;s talk.
+              Reach out to the right team directly. Whether you&rsquo;re an
+              artist, a venue, a brand, or a charity &mdash; we&rsquo;d love to
+              hear from you.
             </motion.p>
           </div>
         </section>
 
-        {/* ── Contact Content ── */}
+        {/* Contact Blocks */}
         <section className="relative py-20 md:py-28">
-          {/* Subtle decorative asterisk */}
-          <motion.span
-            className="pointer-events-none absolute top-12 right-20 hidden select-none text-blue/[0.06] lg:block"
-            style={{ fontSize: "8rem", lineHeight: 1 }}
-            aria-hidden="true"
-            custom={0.5}
-            variants={fadeIn}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            &#x2731;
-          </motion.span>
-
           <div className="mx-auto max-w-[1500px] px-6 md:px-12 lg:px-20">
-            <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-24">
-              {/* ── Left: Contact Details ── */}
-              <motion.div
-                variants={staggerContainer}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
-              >
-                <motion.span
-                  className="text-sm tracking-wide uppercase mb-6 block text-black/40"
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {contacts.map((contact) => (
+                <motion.a
+                  key={contact.email}
+                  href={`mailto:${contact.email}`}
                   variants={staggerItem}
+                  className="group block border border-black/10 bg-white p-8 sm:p-10 transition-all duration-300 hover:border-blue/30 hover:shadow-lg"
                 >
-                  Contact Details
-                </motion.span>
-
-                {/* Email */}
-                <motion.div className="mb-10" variants={staggerItem}>
-                  <p className="text-sm tracking-wide uppercase mb-2 text-black/50">Email</p>
-                  <a
-                    href="mailto:hello@hockleyhustle.co.uk"
-                    className="text-xl font-medium text-black transition-colors duration-200 hover:text-blue md:text-2xl"
+                  <span className="text-[11px] uppercase tracking-[0.2em] text-black/40 block mb-4">
+                    {contact.department}
+                  </span>
+                  <span
+                    className="block text-lg sm:text-xl text-black group-hover:text-blue transition-colors duration-200 break-all"
                     style={{ fontWeight: 500 }}
                   >
-                    hello@hockleyhustle.co.uk
-                  </a>
-                </motion.div>
+                    {contact.email}
+                  </span>
+                  <span className="mt-3 block text-sm text-black/40 leading-relaxed">
+                    {contact.description}
+                  </span>
+                </motion.a>
+              ))}
+            </motion.div>
 
-                {/* Address */}
-                <motion.div className="mb-10" variants={staggerItem}>
-                  <p className="text-sm tracking-wide uppercase mb-2 text-black/50">Address</p>
-                  <address
-                    className="text-lg not-italic leading-relaxed text-black/80 md:text-xl"
-                    style={{ fontWeight: 300 }}
-                  >
-                    Fisher Gate Point
-                    <br />
-                    Nottingham
-                    <br />
-                    NG1 1GD
-                  </address>
-                </motion.div>
-
-                {/* Social */}
-                <motion.div className="mb-10" variants={staggerItem}>
-                  <p className="text-sm tracking-wide uppercase mb-4 text-black/50">Follow Us</p>
-                  <div className="flex items-center gap-5">
-                    {socialLinks.map((social) => (
-                      <a
-                        key={social.label}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group flex items-center gap-2.5 text-black/70 transition-colors duration-200 hover:text-blue"
-                        aria-label={`Follow us on ${social.label}`}
-                      >
-                        <span className="transition-transform duration-200 group-hover:scale-110">
-                          {social.icon}
-                        </span>
-                        <span
-                          className="text-sm"
-                          style={{ fontWeight: 500 }}
-                        >
-                          {social.label}
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                </motion.div>
-
-                {/* Decorative divider */}
-                <motion.div
-                  className="flex items-center gap-3 pt-4"
-                  variants={staggerItem}
-                  aria-hidden="true"
-                >
-                  <span className="text-blue text-sm">&#x2731;</span>
-                  <span className="h-px w-24 bg-black/10" />
-                  <span className="text-blue text-sm">&#x2731;</span>
-                </motion.div>
-
-                {/* Warm aside */}
-                <motion.div
-                  className="mt-8 border-l-2 border-blue/30 pl-5"
-                  variants={staggerItem}
-                >
-                  <p
-                    className="text-editorial text-black/50 text-sm leading-relaxed md:text-base"
-                  >
-                    We&rsquo;re a small team with big ideas. We read every
-                    message and do our best to reply within a few working days.
-                    <span className="text-blue" aria-hidden="true">
-                      {" "}
-                      &#x2731;
-                    </span>
-                  </p>
-                </motion.div>
-              </motion.div>
-
-              {/* ── Right: Contact Form ── */}
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{
-                  duration: 0.7,
-                  delay: 0.2,
-                  ease: [0.25, 0.46, 0.45, 0.94] as const,
-                }}
-              >
-                <span className="text-sm tracking-wide uppercase mb-6 block text-black/40">
-                  Send a Message
+            {/* Address + Social */}
+            <motion.div
+              className="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-12 border-t border-black/10 pt-16"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] as const }}
+            >
+              <div>
+                <span className="text-[11px] uppercase tracking-[0.2em] text-black/40 block mb-4">
+                  Address
                 </span>
+                <address
+                  className="text-lg not-italic leading-relaxed text-black/80"
+                  style={{ fontWeight: 300 }}
+                >
+                  Fisher Gate Point
+                  <br />
+                  Nottingham
+                  <br />
+                  NG1 1GD
+                </address>
+              </div>
 
-                {submitted ? (
-                  /* ── Success state ── */
-                  <motion.div
-                    className="flex flex-col items-start rounded-2xl bg-grey/60 px-8 py-12 md:px-10 md:py-16"
-                    initial={{ opacity: 0, scale: 0.96 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const }}
-                  >
-                    <motion.span
-                      className="mb-4 text-4xl text-blue"
-                      initial={{ rotate: -90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      transition={{ duration: 0.6, delay: 0.2 }}
+              <div>
+                <span className="text-[11px] uppercase tracking-[0.2em] text-black/40 block mb-4">
+                  Follow Us
+                </span>
+                <div className="flex items-center gap-5">
+                  {socialLinks.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-2.5 text-black/70 transition-colors duration-200 hover:text-blue"
+                      aria-label={`Follow us on ${social.label}`}
                     >
-                      &#x2731;
-                    </motion.span>
-                    <h2
-                      className="text-display mb-3 text-2xl text-black md:text-3xl"
-                    >
-                      MESSAGE SENT
-                    </h2>
-                    <p className="text-editorial mb-8 max-w-md text-black/60">
-                      Thanks for reaching out! We&rsquo;ll get back to you as
-                      soon as we can. In the meantime, follow us on social media
-                      for the latest updates.
-                    </p>
-                    <button
-                      onClick={() => setSubmitted(false)}
-                      className="text-sm tracking-wide uppercase cursor-pointer text-blue transition-colors duration-200 hover:text-blue"
-                    >
-                      Send another message &rarr;
-                    </button>
-                  </motion.div>
-                ) : (
-                  /* ── Form ── */
-                  <form onSubmit={handleSubmit} className="space-y-8">
-                    {/* Name */}
-                    <div>
-                      <label
-                        htmlFor="contact-name"
-                        className="text-sm tracking-wide uppercase mb-3 block text-black/50"
-                      >
-                        Your Name
-                      </label>
-                      <input
-                        id="contact-name"
-                        name="name"
-                        type="text"
-                        required
-                        value={formState.name}
-                        onChange={handleChange}
-                        placeholder="e.g. Robin Hood"
-                        className="w-full border-0 border-b-2 border-black/15 bg-transparent py-3 text-black placeholder:text-black/25 transition-colors duration-200 outline-none focus:border-blue"
-                        style={{ fontSize: "1.05rem", fontWeight: 400 }}
-                      />
-                    </div>
-
-                    {/* Email */}
-                    <div>
-                      <label
-                        htmlFor="contact-email"
-                        className="text-sm tracking-wide uppercase mb-3 block text-black/50"
-                      >
-                        Your Email
-                      </label>
-                      <input
-                        id="contact-email"
-                        name="email"
-                        type="email"
-                        required
-                        value={formState.email}
-                        onChange={handleChange}
-                        placeholder="robin@sherwood.co.uk"
-                        className="w-full border-0 border-b-2 border-black/15 bg-transparent py-3 text-black placeholder:text-black/25 transition-colors duration-200 outline-none focus:border-blue"
-                        style={{ fontSize: "1.05rem", fontWeight: 400 }}
-                      />
-                    </div>
-
-                    {/* Message */}
-                    <div>
-                      <label
-                        htmlFor="contact-message"
-                        className="text-sm tracking-wide uppercase mb-3 block text-black/50"
-                      >
-                        Your Message
-                      </label>
-                      <textarea
-                        id="contact-message"
-                        name="message"
-                        required
-                        rows={5}
-                        value={formState.message}
-                        onChange={handleChange}
-                        placeholder="Tell us what you're thinking..."
-                        className="w-full resize-none border-0 border-b-2 border-black/15 bg-transparent py-3 text-black placeholder:text-black/25 transition-colors duration-200 outline-none focus:border-blue"
-                        style={{ fontSize: "1.05rem", fontWeight: 400 }}
-                      />
-                    </div>
-
-                    {/* Submit */}
-                    <motion.button
-                      type="submit"
-                      disabled={sending}
-                      className="group relative w-full cursor-pointer overflow-hidden rounded-md bg-blue px-8 py-4 text-white transition-all duration-300 hover:bg-blue disabled:opacity-70 sm:w-auto"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <span
-                        className="relative z-10 flex items-center justify-center gap-2 sm:justify-start"
-                        style={{
-                          fontWeight: 700,
-                          fontSize: "0.95rem",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.08em",
-                        }}
-                      >
-                        {sending ? (
-                          <>
-                            <motion.span
-                              className="inline-block text-lg"
-                              animate={{ rotate: 360 }}
-                              transition={{
-                                repeat: Infinity,
-                                duration: 1,
-                                ease: "linear",
-                              }}
-                            >
-                              &#x2731;
-                            </motion.span>
-                            Sending...
-                          </>
-                        ) : (
-                          <>
-                            Send Message
-                            <span
-                              className="inline-block transition-transform duration-200 group-hover:translate-x-1"
-                            >
-                              &rarr;
-                            </span>
-                          </>
-                        )}
+                      <span className="transition-transform duration-200 group-hover:scale-110">
+                        {social.icon}
                       </span>
-                    </motion.button>
+                      <span className="text-sm" style={{ fontWeight: 500 }}>
+                        {social.label}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
 
-                    {/* Privacy note */}
-                    <p className="text-sm tracking-wide uppercase mt-2 text-black/30">
-                      <span className="text-blue" aria-hidden="true">
-                        &#x2731;
-                      </span>{" "}
-                      We&rsquo;ll never share your details with third parties.
-                    </p>
-                  </form>
-                )}
-              </motion.div>
-            </div>
+            {/* Warm aside */}
+            <motion.div
+              className="mt-12 border-l-2 border-blue/30 pl-5"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <p className="text-editorial text-black/50 text-sm leading-relaxed md:text-base">
+                We&rsquo;re a small team with big ideas. We read every message
+                and do our best to reply within a few working days.
+                <span className="text-blue" aria-hidden="true">
+                  {" "}
+                  &#x2731;
+                </span>
+              </p>
+            </motion.div>
           </div>
         </section>
       </main>

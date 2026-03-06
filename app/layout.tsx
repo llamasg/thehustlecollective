@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import PageLoader from "@/components/layout/PageLoader";
 
 export const metadata: Metadata = {
   title: "The Hustle Collective — Events Built for Nottingham",
@@ -25,7 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <PageLoader>{children}</PageLoader>
+      </body>
     </html>
   );
 }

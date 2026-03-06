@@ -5,28 +5,52 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 const festivals = [
-  { name: "Hockley Hustle", slug: "hockley-hustle" },
-  { name: "Young Hustlers", slug: "young-hustlers" },
-  { name: "Green Hustle", slug: "green-hustle" },
-  { name: "Hustle Cinematic", slug: "hustle-cinematic" },
+  { name: "Hockley Hustle", slug: "hockley-hustle", tagline: "Nottingham's music & arts festival" },
+  { name: "Young Hustlers", slug: "young-hustlers", tagline: "The next generation festival" },
+  { name: "Green Hustle", slug: "green-hustle", tagline: "Sustainability meets culture" },
+  { name: "Hustle Cinematic", slug: "hustle-cinematic", tagline: "Film, sound & storytelling" },
 ];
 
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Festivals", href: "/festivals", hasMega: true },
+const programmeItems = [
+  { name: "Future Hustlers", slug: "future-hustlers", tagline: "Talent development hub" },
+  { name: "Promoter Mentorship", slug: "promoter-mentorship", tagline: "Supporting emerging promoters" },
+  { name: "Industry Day 2023", slug: "industry-day-2023", tagline: "Panels, talks & networking" },
+  { name: "Industry Day 2024", slug: "industry-day-2024", tagline: "Panels, talks & networking" },
+  { name: "Industry Weekend 2025", slug: "industry-weekend-2025", tagline: "Two days of industry insight" },
+  { name: "Artist Development 2026", slug: "artist-development-2026", tagline: "Nurturing creative talent" },
+];
+
+type NavLink = {
+  label: string;
+  href: string;
+  mega?: "festivals" | "programmes";
+};
+
+const navLinks: NavLink[] = [
+  { label: "Festivals", href: "/festivals/hockley-hustle", mega: "festivals" },
+  { label: "Programmes", href: "/programmes/future-hustlers", mega: "programmes" },
   { label: "What We Do", href: "/what-we-do" },
-  { label: "Who We Are", href: "/who-we-are" },
-  { label: "Get In Touch", href: "/contact" },
+  { label: "Get In Touch", href: "/get-in-touch" },
 ];
 
-function HamburgerIcon({
-  isOpen,
-  scrolled,
-}: {
-  isOpen: boolean;
-  scrolled: boolean;
-}) {
-  const barColor = isOpen ? "bg-white" : scrolled ? "bg-black" : "bg-black";
+function getLuminance(r: number, g: number, b: number): number {
+  const [rs, gs, bs] = [r, g, b].map((c) => {
+    const s = c / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+}
+
+function parseColor(color: string): [number, number, number] | null {
+  if (color.startsWith("rgb")) {
+    const m = color.match(/(\d+)/g);
+    if (m && m.length >= 3) return [+m[0], +m[1], +m[2]];
+  }
+  return null;
+}
+
+function HamburgerIcon({ isOpen, dark }: { isOpen: boolean; dark: boolean }) {
+  const barColor = isOpen ? "bg-white" : dark ? "bg-white" : "bg-black";
 
   return (
     <div className="relative flex h-5 w-6 flex-col items-center justify-center">
@@ -52,8 +76,56 @@ function HamburgerIcon({
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [megaOpen, setMegaOpen] = useState(false);
+  const [activeMega, setActiveMega] = useState<"festivals" | "programmes" | null>(null);
+  const [isDark, setIsDark] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const megaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const navRef = useRef<HTMLElement>(null);
+
+  // Detect background luminance behind the navbar
+  useEffect(() => {
+    if (mobileOpen) return;
+
+    function detectBackground() {
+      if (typeof document === "undefined") return;
+      const navHeight = navRef.current?.offsetHeight ?? 56;
+      const sampleY = navHeight / 2;
+      const samplePoints = [
+        window.innerWidth * 0.25,
+        window.innerWidth * 0.5,
+        window.innerWidth * 0.75,
+      ];
+
+      let totalLuminance = 0;
+      let samples = 0;
+
+      for (const x of samplePoints) {
+        // Temporarily hide the nav to sample what's behind it
+        if (navRef.current) navRef.current.style.pointerEvents = "none";
+        const el = document.elementFromPoint(x, sampleY);
+        if (navRef.current) navRef.current.style.pointerEvents = "";
+
+        if (el && el !== navRef.current) {
+          const bg = window.getComputedStyle(el).backgroundColor;
+          const rgb = parseColor(bg);
+          if (rgb) {
+            totalLuminance += getLuminance(...rgb);
+            samples++;
+          }
+        }
+      }
+
+      if (samples > 0) {
+        // If background is dark (luminance < 0.35), use light text
+        setIsDark(totalLuminance / samples < 0.35);
+      }
+    }
+
+    detectBackground();
+    const onScroll = () => detectBackground();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [mobileOpen]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -67,20 +139,33 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
-  const closeMobile = useCallback(() => setMobileOpen(false), []);
+  const closeMobile = useCallback(() => {
+    setMobileOpen(false);
+    setMobileExpanded(null);
+  }, []);
 
-  const openMega = useCallback(() => {
+  const openMega = useCallback((which: "festivals" | "programmes") => {
     if (megaTimeoutRef.current) clearTimeout(megaTimeoutRef.current);
-    setMegaOpen(true);
+    setActiveMega(which);
   }, []);
 
   const closeMega = useCallback(() => {
-    megaTimeoutRef.current = setTimeout(() => setMegaOpen(false), 150);
+    megaTimeoutRef.current = setTimeout(() => setActiveMega(null), 150);
   }, []);
+
+  // When scrolled, always use dark text on light bg. When not scrolled, detect.
+  const useLight = !scrolled && isDark && !activeMega;
+  const textColor = useLight ? "text-white" : "text-black";
+  const textMuted = useLight ? "text-white/60" : "text-black/60";
+  const textHover = useLight ? "hover:text-white" : "hover:text-black";
+
+  const megaItems = activeMega === "festivals" ? festivals : programmeItems;
+  const megaBase = activeMega === "festivals" ? "/festivals" : "/programmes";
 
   return (
     <>
       <motion.nav
+        ref={navRef}
         className="fixed top-0 right-0 left-0 z-50"
         initial={false}
         animate={{
@@ -101,7 +186,7 @@ export default function Navbar() {
         <div className="mx-auto flex h-14 max-w-[1500px] items-center justify-between px-6 sm:px-10 lg:px-16">
           <Link href="/" className="relative z-10" onClick={closeMobile}>
             <span
-              className="text-[13px] sm:text-[14px] uppercase tracking-[0.15em] text-black leading-none"
+              className={`text-[13px] sm:text-[14px] uppercase tracking-[0.15em] leading-none transition-colors duration-300 ${textColor}`}
               style={{ fontWeight: 400 }}
             >
               The Hustle Collective
@@ -110,40 +195,43 @@ export default function Navbar() {
 
           <div className="hidden items-center gap-0 lg:flex">
             {navLinks.map((link) =>
-              link.hasMega ? (
+              link.mega ? (
                 <div
                   key={link.label}
                   className="relative"
-                  onMouseEnter={openMega}
+                  onMouseEnter={() => openMega(link.mega!)}
                   onMouseLeave={closeMega}
                 >
-                  <Link
-                    href={link.href}
-                    className="px-4 py-2 text-[13px] text-black/60 hover:text-black transition-colors duration-200"
+                  <span
+                    className={`cursor-pointer px-4 py-2 text-[13px] ${textMuted} ${textHover} transition-colors duration-200`}
                     style={{ fontWeight: 400 }}
                   >
                     {link.label}
-                  </Link>
+                  </span>
 
                   <AnimatePresence>
-                    {megaOpen && (
+                    {activeMega === link.mega && (
                       <motion.div
                         initial={{ opacity: 0, y: -4 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -4 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute top-full left-0 z-50 mt-1 w-[240px]"
+                        className="absolute top-full left-0 z-50 mt-1 w-[280px]"
                       >
-                        <div className="bg-white border border-black/10 p-4">
-                          <div className="flex flex-col gap-0.5">
-                            {festivals.map((fest) => (
+                        <div className="bg-white border border-black/10 p-5">
+                          <div className="flex flex-col gap-1">
+                            {(link.mega === "festivals" ? festivals : programmeItems).map((item) => (
                               <Link
-                                key={fest.slug}
-                                href={`/festivals/${fest.slug}`}
-                                className="py-1.5 text-[13px] text-black/60 hover:text-blue transition-colors duration-200"
-                                style={{ fontWeight: 400 }}
+                                key={item.slug}
+                                href={`${link.mega === "festivals" ? "/festivals" : "/programmes"}/${item.slug}`}
+                                className="group py-1.5"
                               >
-                                {fest.name}
+                                <span className="block text-[13px] text-black/80 group-hover:text-blue transition-colors duration-200" style={{ fontWeight: 500 }}>
+                                  {item.name}
+                                </span>
+                                <span className="block text-[11px] text-black/35 group-hover:text-black/50 transition-colors duration-200">
+                                  {item.tagline}
+                                </span>
                               </Link>
                             ))}
                           </div>
@@ -156,7 +244,7 @@ export default function Navbar() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="px-4 py-2 text-[13px] text-black/60 hover:text-black transition-colors duration-200"
+                  className={`px-4 py-2 text-[13px] ${textMuted} ${textHover} transition-colors duration-200`}
                   style={{ fontWeight: 400 }}
                 >
                   {link.label}
@@ -171,7 +259,7 @@ export default function Navbar() {
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
           >
-            <HamburgerIcon isOpen={mobileOpen} scrolled={scrolled} />
+            <HamburgerIcon isOpen={mobileOpen} dark={useLight} />
           </button>
         </div>
       </motion.nav>
@@ -198,44 +286,73 @@ export default function Navbar() {
                       }}
                       exit={{ opacity: 0 }}
                     >
-                      <Link
-                        href={link.href}
-                        onClick={closeMobile}
-                        className="inline-block py-1.5 text-[1.8rem] uppercase tracking-[-0.02em] text-white hover:text-blue transition-colors duration-200"
-                        style={{ fontWeight: 300 }}
-                      >
-                        {link.label}
-                      </Link>
+                      {link.mega ? (
+                        <button
+                          onClick={() =>
+                            setMobileExpanded(
+                              mobileExpanded === link.mega ? null : link.mega!
+                            )
+                          }
+                          className="inline-flex items-center gap-3 py-1.5 text-[1.8rem] uppercase tracking-[-0.02em] text-white hover:text-blue transition-colors duration-200 cursor-pointer"
+                          style={{ fontWeight: 300 }}
+                        >
+                          {link.label}
+                          <motion.span
+                            className="text-[0.8rem] text-white/30"
+                            animate={{ rotate: mobileExpanded === link.mega ? 180 : 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            &#9660;
+                          </motion.span>
+                        </button>
+                      ) : (
+                        <Link
+                          href={link.href}
+                          onClick={closeMobile}
+                          className="inline-block py-1.5 text-[1.8rem] uppercase tracking-[-0.02em] text-white hover:text-blue transition-colors duration-200"
+                          style={{ fontWeight: 300 }}
+                        >
+                          {link.label}
+                        </Link>
+                      )}
                     </motion.div>
 
-                    {link.hasMega && (
-                      <div className="ml-0 flex flex-col gap-0.5 pt-1 pb-2">
-                        {festivals.map((fest, fi) => (
-                          <motion.div
-                            key={fest.slug}
-                            initial={{ opacity: 0, x: -12 }}
-                            animate={{
-                              opacity: 1,
-                              x: 0,
-                              transition: {
-                                delay: 0.25 + fi * 0.05,
-                                duration: 0.3,
-                              },
-                            }}
-                            exit={{ opacity: 0 }}
-                          >
-                            <Link
-                              href={`/festivals/${fest.slug}`}
-                              onClick={closeMobile}
-                              className="py-1 text-sm text-white/40 hover:text-white transition-colors duration-200"
-                              style={{ fontWeight: 400 }}
+                    <AnimatePresence>
+                      {link.mega && mobileExpanded === link.mega && (
+                        <motion.div
+                          className="ml-0 flex flex-col gap-0.5 pt-1 pb-2 overflow-hidden"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {(link.mega === "festivals" ? festivals : programmeItems).map((item, fi) => (
+                            <motion.div
+                              key={item.slug}
+                              initial={{ opacity: 0, x: -12 }}
+                              animate={{
+                                opacity: 1,
+                                x: 0,
+                                transition: {
+                                  delay: 0.05 + fi * 0.04,
+                                  duration: 0.3,
+                                },
+                              }}
+                              exit={{ opacity: 0 }}
                             >
-                              {fest.name}
-                            </Link>
-                          </motion.div>
-                        ))}
-                      </div>
-                    )}
+                              <Link
+                                href={`${link.mega === "festivals" ? "/festivals" : "/programmes"}/${item.slug}`}
+                                onClick={closeMobile}
+                                className="py-1 text-sm text-white/40 hover:text-white transition-colors duration-200"
+                                style={{ fontWeight: 400 }}
+                              >
+                                {item.name}
+                              </Link>
+                            </motion.div>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 ))}
               </nav>

@@ -27,7 +27,7 @@ export default function ImpactStats() {
           Impact
         </motion.p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-10 gap-x-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-12 gap-x-10 sm:gap-x-16">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
