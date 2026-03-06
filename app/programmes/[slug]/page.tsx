@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { draftMode } from "next/headers";
 import { getProgrammeBySlug, programmes } from "@/data/programmes";
 import {
   getProgrammeBySlugFromSanity,
@@ -11,9 +12,9 @@ import Footer from "@/components/layout/Footer";
 import ProgrammePageContent from "@/components/programmes/ProgrammePageContent";
 import { type Programme } from "@/data/programmes";
 
-async function resolveProgramme(slug: string): Promise<Programme | null> {
+async function resolveProgramme(slug: string, isDraft = false): Promise<Programme | null> {
   // Try Sanity first
-  const sanity = await getProgrammeBySlugFromSanity(slug);
+  const sanity = await getProgrammeBySlugFromSanity(slug, isDraft);
   if (sanity) {
     return {
       slug: sanity.slug,
@@ -80,7 +81,8 @@ export default async function ProgrammePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const programme = await resolveProgramme(slug);
+  const { isEnabled: isDraft } = await draftMode();
+  const programme = await resolveProgramme(slug, isDraft);
 
   if (!programme) {
     notFound();

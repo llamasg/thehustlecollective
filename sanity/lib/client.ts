@@ -8,5 +8,8 @@ export const client = projectId
       dataset,
       apiVersion,
       useCdn: true,
+      stega: {
+        studioUrl: process.env.NEXT_PUBLIC_SANITY_STUDIO_URL,
+      },
     })
   : null

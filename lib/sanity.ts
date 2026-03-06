@@ -8,6 +8,9 @@ export const client = projectId
       dataset,
       apiVersion,
       useCdn: true,
+      stega: {
+        studioUrl: process.env.NEXT_PUBLIC_SANITY_STUDIO_URL,
+      },
     })
   : null
 
@@ -89,21 +92,36 @@ export interface BlogPost {
   author?: string
 }
 
+// ── Draft-aware fetch helper ──
+
+function fetchOptions(isDraft: boolean) {
+  if (isDraft) {
+    return {
+      perspective: 'drafts' as const,
+      useCdn: false,
+      stega: true,
+      token: process.env.SANITY_API_READ_TOKEN,
+      next: { revalidate: 0 },
+    }
+  }
+  return {}
+}
+
 // ── Helper Functions ──
 
-export async function getAllPosts(): Promise<BlogPost[]> {
+export async function getAllPosts(isDraft = false): Promise<BlogPost[]> {
   if (!client) return []
-  return client.fetch<BlogPost[]>(allPostsQuery, {}, { next: { tags: ['blogPost'] } })
+  return client.fetch<BlogPost[]>(allPostsQuery, {}, { ...fetchOptions(isDraft), next: { tags: ['blogPost'], ...(isDraft ? { revalidate: 0 } : {}) } })
 }
 
-export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
+export async function getPostBySlug(slug: string, isDraft = false): Promise<BlogPost | null> {
   if (!client) return null
-  return client.fetch<BlogPost | null>(postBySlugQuery, { slug }, { next: { tags: ['blogPost'] } })
+  return client.fetch<BlogPost | null>(postBySlugQuery, { slug }, { ...fetchOptions(isDraft), next: { tags: ['blogPost'], ...(isDraft ? { revalidate: 0 } : {}) } })
 }
 
-export async function getLatestPosts(): Promise<BlogPost[]> {
+export async function getLatestPosts(isDraft = false): Promise<BlogPost[]> {
   if (!client) return []
-  return client.fetch<BlogPost[]>(latestPostsQuery, {}, { next: { tags: ['blogPost'] } })
+  return client.fetch<BlogPost[]>(latestPostsQuery, {}, { ...fetchOptions(isDraft), next: { tags: ['blogPost'], ...(isDraft ? { revalidate: 0 } : {}) } })
 }
 
 export async function getAllPostSlugs(): Promise<string[]> {
@@ -178,14 +196,14 @@ export interface SanityProgramme {
   order?: number
 }
 
-export async function getAllProgrammes(): Promise<SanityProgramme[]> {
+export async function getAllProgrammes(isDraft = false): Promise<SanityProgramme[]> {
   if (!client) return []
-  return client.fetch<SanityProgramme[]>(allProgrammesQuery, {}, { next: { tags: ['programme'] } })
+  return client.fetch<SanityProgramme[]>(allProgrammesQuery, {}, { ...fetchOptions(isDraft), next: { tags: ['programme'], ...(isDraft ? { revalidate: 0 } : {}) } })
 }
 
-export async function getProgrammeBySlugFromSanity(slug: string): Promise<SanityProgramme | null> {
+export async function getProgrammeBySlugFromSanity(slug: string, isDraft = false): Promise<SanityProgramme | null> {
   if (!client) return null
-  return client.fetch<SanityProgramme | null>(programmeBySlugQuery, { slug }, { next: { tags: ['programme'] } })
+  return client.fetch<SanityProgramme | null>(programmeBySlugQuery, { slug }, { ...fetchOptions(isDraft), next: { tags: ['programme'], ...(isDraft ? { revalidate: 0 } : {}) } })
 }
 
 export async function getAllProgrammeSlugs(): Promise<string[]> {

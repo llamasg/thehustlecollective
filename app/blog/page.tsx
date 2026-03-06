@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { draftMode } from "next/headers";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getAllPosts, type BlogPost } from "@/lib/sanity";
@@ -27,10 +28,11 @@ const categoryColors: Record<string, string> = {
 };
 
 export default async function BlogPage() {
+  const { isEnabled: isDraft } = await draftMode();
   let posts: BlogPost[] = [];
 
   try {
-    posts = await getAllPosts();
+    posts = await getAllPosts(isDraft);
   } catch {
     // Sanity fetch failed — fall through to placeholder
   }

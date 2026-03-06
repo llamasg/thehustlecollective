@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
+import { VisualEditing } from "next-sanity/visual-editing";
 import "./globals.css";
 import PageLoader from "@/components/layout/PageLoader";
+import { DisableDraftMode } from "@/components/DisableDraftMode";
 
 export const metadata: Metadata = {
   title: "The Hustle Collective — Events Built for Nottingham",
@@ -19,15 +22,23 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { isEnabled: isDraftMode } = await draftMode();
+
   return (
     <html lang="en">
       <body className="antialiased">
         <PageLoader>{children}</PageLoader>
+        {isDraftMode && (
+          <>
+            <VisualEditing />
+            <DisableDraftMode />
+          </>
+        )}
       </body>
     </html>
   );

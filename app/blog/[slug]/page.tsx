@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { draftMode } from "next/headers";
 import { PortableText, PortableTextComponents } from "@portabletext/react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -161,11 +162,12 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const { isEnabled: isDraft } = await draftMode();
 
   let post: BlogPost | null = null;
 
   try {
-    post = await getPostBySlug(slug);
+    post = await getPostBySlug(slug, isDraft);
   } catch {
     // Sanity fetch failed
   }
