@@ -1,12 +1,47 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProgrammeBySlug, programmes } from "@/data/programmes";
+import {
+  getProgrammeBySlugFromSanity,
+  getAllProgrammeSlugs,
+  sanityImageUrl,
+} from "@/lib/sanity";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ProgrammePageContent from "@/components/programmes/ProgrammePageContent";
+import { type Programme } from "@/data/programmes";
 
-export function generateStaticParams() {
-  return programmes.map((p) => ({ slug: p.slug }));
+async function resolveProgramme(slug: string): Promise<Programme | null> {
+  // Try Sanity first
+  const sanity = await getProgrammeBySlugFromSanity(slug);
+  if (sanity) {
+    return {
+      slug: sanity.slug,
+      name: sanity.name,
+      tagline: sanity.tagline || "",
+      descriptor: sanity.descriptor || "",
+      label: sanity.label || "",
+      heroImage: sanity.heroImage ? sanityImageUrl(sanity.heroImage) : "/images/placeholder-programme.jpg",
+      galleryImages: (sanity.galleryImages || []).map((img) => sanityImageUrl(img)),
+      hasContent: sanity.hasContent ?? false,
+      featured: sanity.featured ?? false,
+      intro: sanity.intro,
+      sections: sanity.sections,
+      pullQuote: sanity.pullQuote,
+      speakers: sanity.speakers,
+    };
+  }
+
+  // Fall back to static data
+  return getProgrammeBySlug(slug) || null;
+}
+
+export async function generateStaticParams() {
+  // Merge Sanity slugs with static slugs
+  const sanitySlugs = await getAllProgrammeSlugs();
+  const staticSlugs = programmes.map((p) => p.slug);
+  const allSlugs = [...new Set([...sanitySlugs, ...staticSlugs])];
+  return allSlugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -15,7 +50,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const programme = getProgrammeBySlug(slug);
+  const programme = await resolveProgramme(slug);
 
   if (!programme) {
     return { title: "Programme Not Found" };
@@ -45,7 +80,7 @@ export default async function ProgrammePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const programme = getProgrammeBySlug(slug);
+  const programme = await resolveProgramme(slug);
 
   if (!programme) {
     notFound();

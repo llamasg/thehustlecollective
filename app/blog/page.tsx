@@ -18,70 +18,6 @@ export const metadata: Metadata = {
   ],
 };
 
-// ── Placeholder data for when Sanity has no posts yet ──
-const placeholderPosts: BlogPost[] = [
-  {
-    _id: "placeholder-1",
-    title: "Hockley Hustle 2026 — Call for Artists",
-    slug: { current: "hockley-hustle-2026-call-for-artists" },
-    publishedAt: "2026-02-15T10:00:00Z",
-    category: "Opportunity",
-    excerpt:
-      "We're looking for talented artists, musicians, and performers to join our 2026 lineup. Applications are now open for all stages and venues.",
-    author: "The Hustle Collective",
-  },
-  {
-    _id: "placeholder-2",
-    title: "Green Hustle Partners with Nottingham City Council",
-    slug: { current: "green-hustle-partners-city-council" },
-    publishedAt: "2026-02-01T09:00:00Z",
-    category: "News",
-    excerpt:
-      "A new partnership to bring sustainable practices to every corner of the festival. Together, we're building a greener future for live events.",
-    author: "The Hustle Collective",
-  },
-  {
-    _id: "placeholder-3",
-    title: "Young Hustlers 2025 — What a Night",
-    slug: { current: "young-hustlers-2025-recap" },
-    publishedAt: "2026-01-20T12:00:00Z",
-    category: "Recap",
-    excerpt:
-      "Over 800 young creatives came together for a night of music, spoken word, and visual art. Here's everything that went down.",
-    author: "The Hustle Collective",
-  },
-  {
-    _id: "placeholder-4",
-    title: "Hustle Cinematic Launch Event Announced",
-    slug: { current: "hustle-cinematic-launch-event" },
-    publishedAt: "2026-01-10T14:00:00Z",
-    category: "Announcement",
-    excerpt:
-      "Mark your calendars. Our brand-new film and visual storytelling festival arrives in Nottingham this spring.",
-    author: "The Hustle Collective",
-  },
-  {
-    _id: "placeholder-5",
-    title: "Volunteer with The Hustle Collective",
-    slug: { current: "volunteer-with-hustle-collective" },
-    publishedAt: "2025-12-15T10:00:00Z",
-    category: "Opportunity",
-    excerpt:
-      "Join our team of dedicated volunteers and help make Nottingham's biggest community festivals happen. No experience needed — just enthusiasm.",
-    author: "The Hustle Collective",
-  },
-  {
-    _id: "placeholder-6",
-    title: "Hockley Hustle Wins Community Impact Award",
-    slug: { current: "hockley-hustle-community-impact-award" },
-    publishedAt: "2025-12-01T11:00:00Z",
-    category: "News",
-    excerpt:
-      "We're proud to announce that Hockley Hustle has been recognised for its outstanding contribution to community wellbeing in Nottingham.",
-    author: "The Hustle Collective",
-  },
-];
-
 // ── Category color map ──
 const categoryColors: Record<string, string> = {
   Opportunity: "bg-blue",
@@ -97,11 +33,6 @@ export default async function BlogPage() {
     posts = await getAllPosts();
   } catch {
     // Sanity fetch failed — fall through to placeholder
-  }
-
-  // Use placeholder data if no posts exist in Sanity
-  if (!posts || posts.length === 0) {
-    posts = placeholderPosts;
   }
 
   // Resolve image URLs server-side (can't pass urlFor function to client component)
@@ -170,11 +101,21 @@ export default async function BlogPage() {
               </span>
             </div>
 
-            <BlogGrid
-              posts={posts}
-              categoryColors={categoryColors}
-              imageUrls={imageUrls}
-            />
+            {posts.length > 0 ? (
+              <BlogGrid
+                posts={posts}
+                categoryColors={categoryColors}
+                imageUrls={imageUrls}
+              />
+            ) : (
+              <div className="py-20 text-center">
+                <span className="text-blue text-4xl block mb-6" aria-hidden="true">&#x2731;</span>
+                <p className="text-display text-2xl text-black/80 mb-4">No posts yet</p>
+                <p className="text-editorial text-black/40 max-w-md mx-auto">
+                  Blog posts will appear here once they&rsquo;re published in the CMS.
+                </p>
+              </div>
+            )}
           </div>
         </section>
       </main>

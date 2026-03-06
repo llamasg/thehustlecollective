@@ -1,4 +1,5 @@
 import { createClient } from 'next-sanity'
+import imageUrlBuilder from '@sanity/image-url'
 import { apiVersion, dataset, projectId } from '@/sanity/env'
 
 export const client = projectId
@@ -9,6 +10,14 @@ export const client = projectId
       useCdn: true,
     })
   : null
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const builder = client ? imageUrlBuilder(client) : null
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function sanityImageUrl(source: any): string {
+  if (!builder || !source) return ''
+  return builder.image(source).auto('format').url()
+}
 
 // ── GROQ Queries ──
 
@@ -100,4 +109,86 @@ export async function getLatestPosts(): Promise<BlogPost[]> {
 export async function getAllPostSlugs(): Promise<string[]> {
   if (!client) return []
   return client.fetch<string[]>(postSlugsQuery, {}, { next: { tags: ['blogPost'] } })
+}
+
+// ── Programme Queries ──
+
+export const allProgrammesQuery = `
+  *[_type == "programme"] | order(order asc) {
+    _id,
+    name,
+    "slug": slug.current,
+    tagline,
+    descriptor,
+    label,
+    featured,
+    hasContent,
+    heroImage,
+    intro,
+    sections[] { title, body },
+    pullQuote,
+    speakers[] { name, role },
+    galleryImages[] { asset->, alt },
+    order
+  }
+`
+
+export const programmeBySlugQuery = `
+  *[_type == "programme" && slug.current == $slug][0] {
+    _id,
+    name,
+    "slug": slug.current,
+    tagline,
+    descriptor,
+    label,
+    featured,
+    hasContent,
+    heroImage,
+    intro,
+    sections[] { title, body },
+    pullQuote,
+    speakers[] { name, role },
+    galleryImages[] { asset->, alt },
+    order
+  }
+`
+
+export const programmeSlugsQuery = `
+  *[_type == "programme" && defined(slug.current)].slug.current
+`
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface SanityProgramme {
+  _id: string
+  name: string
+  slug: string
+  tagline: string
+  descriptor: string
+  label: string
+  featured: boolean
+  hasContent: boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  heroImage?: any
+  intro?: string
+  sections?: { title: string; body: string }[]
+  pullQuote?: string
+  speakers?: { name: string; role: string }[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  galleryImages?: any[]
+  order?: number
+}
+
+export async function getAllProgrammes(): Promise<SanityProgramme[]> {
+  if (!client) return []
+  return client.fetch<SanityProgramme[]>(allProgrammesQuery, {}, { next: { tags: ['programme'] } })
+}
+
+export async function getProgrammeBySlugFromSanity(slug: string): Promise<SanityProgramme | null> {
+  if (!client) return null
+  return client.fetch<SanityProgramme | null>(programmeBySlugQuery, { slug }, { next: { tags: ['programme'] } })
+}
+
+export async function getAllProgrammeSlugs(): Promise<string[]> {
+  if (!client) return []
+  return client.fetch<string[]>(programmeSlugsQuery, {}, { next: { tags: ['programme'] } })
 }

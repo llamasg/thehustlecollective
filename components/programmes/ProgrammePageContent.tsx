@@ -35,36 +35,36 @@ function HeroSection({ programme }: { programme: Programme }) {
       </div>
 
       <div className="relative mx-auto max-w-[900px] px-6 md:px-12">
-        {/* Back link */}
-        {programme.slug !== "future-hustlers" && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.5, ease }}
+        {/* Breadcrumb */}
+        <motion.nav
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.5, ease }}
+          className="mb-8 flex flex-wrap items-center gap-1.5 text-sm tracking-wide uppercase"
+          aria-label="Breadcrumb"
+        >
+          <Link
+            href="/"
+            className="text-white/30 transition-colors duration-200 hover:text-blue"
           >
-            <Link
-              href="/programmes/future-hustlers"
-              className="text-sm tracking-wide uppercase mb-8 inline-flex items-center gap-2 text-white/40 transition-colors duration-200 hover:text-blue"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                className="transition-transform duration-200 hover:-translate-x-1"
+            Home
+          </Link>
+          <span className="text-white/20">/</span>
+          {programme.slug === "future-hustlers" ? (
+            <span className="text-white/60">Future Hustlers</span>
+          ) : (
+            <>
+              <Link
+                href="/programmes/future-hustlers"
+                className="text-white/30 transition-colors duration-200 hover:text-blue"
               >
-                <path
-                  d="M13 7H1M1 7L7 1M1 7L7 13"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Future Hustlers
-            </Link>
-          </motion.div>
-        )}
+                Future Hustlers
+              </Link>
+              <span className="text-white/20">/</span>
+              <span className="text-white/60">{programme.name}</span>
+            </>
+          )}
+        </motion.nav>
 
         {/* Label & descriptor */}
         <motion.div

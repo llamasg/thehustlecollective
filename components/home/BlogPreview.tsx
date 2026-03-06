@@ -4,30 +4,18 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import Link from "next/link";
 
-const placeholderPosts = [
-  {
-    title: "Hockley Hustle 2025 \u2014 Band Applications Open",
-    date: "2025-03-15",
-    category: "Opportunity",
-    slug: "hockley-hustle-2025-applications",
-  },
-  {
-    title: "Future Hustlers Mentorship \u2014 Applications Now Open",
-    date: "2025-02-28",
-    category: "Opportunity",
-    slug: "future-hustlers-2025",
-  },
-  {
-    title: "Green Hustle Plants Its 10,000th Tree",
-    date: "2025-01-20",
-    category: "News",
-    slug: "green-hustle-10000-trees",
-  },
-];
+export interface BlogPreviewPost {
+  title: string;
+  date: string;
+  category: string;
+  slug: string;
+}
 
-export default function BlogPreview() {
+export default function BlogPreview({ posts }: { posts?: BlogPreviewPost[] }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
+
+  if (!posts || posts.length === 0) return null;
 
   return (
     <section ref={ref} className="bg-white border-t border-black/10">
@@ -55,7 +43,7 @@ export default function BlogPreview() {
         </div>
 
         <div className="divide-y divide-black/10">
-          {placeholderPosts.map((post, i) => (
+          {posts.map((post, i) => (
             <motion.article
               key={post.slug}
               initial={{ opacity: 0, y: 15 }}

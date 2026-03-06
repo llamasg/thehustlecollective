@@ -9,8 +9,24 @@ import PartnersGrid from "@/components/home/PartnersGrid";
 import BlogPreview from "@/components/home/BlogPreview";
 import EditorialGallery from "@/components/home/EditorialGallery";
 import ProgrammesGrid from "@/components/home/ProgrammesGrid";
+import { getLatestPosts } from "@/lib/sanity";
+import type { BlogPreviewPost } from "@/components/home/BlogPreview";
 
-export default function Home() {
+export default async function Home() {
+  let blogPosts: BlogPreviewPost[] = [];
+
+  try {
+    const posts = await getLatestPosts();
+    blogPosts = posts.map((p) => ({
+      title: p.title,
+      date: p.publishedAt,
+      category: p.category,
+      slug: p.slug.current,
+    }));
+  } catch {
+    // Sanity unavailable — BlogPreview will hide itself
+  }
+
   return (
     <>
       <Navbar />
@@ -22,7 +38,7 @@ export default function Home() {
         <ProgrammesGrid />
         <EditorialGallery />
         <Testimonials />
-        <BlogPreview />
+        <BlogPreview posts={blogPosts} />
         <PartnersGrid />
       </main>
       <Footer />
