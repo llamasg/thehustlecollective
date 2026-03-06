@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AnimatedReveal from "@/components/shared/AnimatedReveal";
 import StaggeredText from "@/components/shared/StaggeredText";
+import { programmes } from "@/data/programmes";
 
 export const metadata: Metadata = {
   title: "What We Do — The Hustle Collective",
@@ -14,40 +16,24 @@ export const metadata: Metadata = {
 const festivals = [
   {
     name: "Hockley Hustle",
-    color: "#e85d26",
+    color: "#174af4",
     description: "Nottingham's original multi-venue music and arts festival",
   },
   {
     name: "Young Hustlers",
-    color: "#1a8a8a",
+    color: "#174af4",
     description: "Platforming the next generation of creative talent",
   },
   {
     name: "Green Hustle",
-    color: "#0d6b6b",
+    color: "#174af4",
     description: "Where sustainability meets celebration",
   },
   {
     name: "Hustle Cinematic",
     color: "#1a1a1a",
-    accentColor: "#e85d26",
+    accentColor: "#174af4",
     description: "Film, sound and visual storytelling",
-  },
-];
-
-/* ── Programmes ── */
-const programmes = [
-  {
-    name: "Future Hustlers",
-    description: "Schools outreach and youth development",
-  },
-  {
-    name: "Queer Hustle",
-    description: "Celebrating LGBTQ+ creativity and community",
-  },
-  {
-    name: "Industry Day",
-    description: "Professional development for emerging artists",
   },
 ];
 
@@ -57,10 +43,10 @@ export default function WhatWeDoPage() {
       <Navbar />
       <main>
         {/* ── Hero Section ── */}
-        <section className="relative min-h-[70vh] flex items-end bg-charcoal overflow-hidden">
+        <section className="relative min-h-[70vh] flex items-end bg-black overflow-hidden">
           {/* Decorative background brace */}
           <div
-            className="pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 select-none text-teal opacity-[0.04] hidden lg:block"
+            className="pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 select-none text-blue opacity-[0.04] hidden lg:block"
             aria-hidden="true"
             style={{
               fontFamily:
@@ -76,7 +62,7 @@ export default function WhatWeDoPage() {
           <div className="relative z-10 w-full px-6 pt-32 pb-16 sm:px-12 lg:px-20 lg:pb-24">
             {/* Section label */}
             <AnimatedReveal delay={0.2}>
-              <span className="text-mono text-white/40 mb-8 block">
+              <span className="text-sm tracking-wide uppercase text-white/40 mb-8 block">
                 &#x2731; About Us
               </span>
             </AnimatedReveal>
@@ -99,24 +85,24 @@ export default function WhatWeDoPage() {
           </div>
 
           {/* Bottom gradient transition */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-off-white to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-grey to-transparent" />
         </section>
 
         {/* ── Editorial Body Section ── */}
-        <section className="relative px-6 py-24 sm:px-12 lg:px-20 lg:py-40 bg-off-white overflow-hidden">
+        <section className="relative px-6 py-24 sm:px-12 lg:px-20 lg:py-40 bg-grey overflow-hidden">
           <div className="mx-auto max-w-[1500px]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
               {/* ── Left column: Editorial text ── */}
               <div className="lg:col-span-7">
                 <AnimatedReveal>
-                  <span className="text-mono text-charcoal/40 mb-10 block">
+                  <span className="text-sm tracking-wide uppercase text-black/40 mb-10 block">
                     &#x2731; Our Story
                   </span>
                 </AnimatedReveal>
 
                 <div className="space-y-8">
                   <AnimatedReveal delay={0.1}>
-                    <p className="text-editorial text-xl sm:text-2xl text-charcoal/90 leading-relaxed">
+                    <p className="text-editorial text-xl sm:text-2xl text-black/90 leading-relaxed">
                       The Hustle Collective are a family of experienced
                       freelancers from many backgrounds. Sharing an ethos to
                       create positive change, we promote and support creativity.
@@ -125,7 +111,7 @@ export default function WhatWeDoPage() {
                   </AnimatedReveal>
 
                   <AnimatedReveal delay={0.2}>
-                    <p className="text-editorial text-xl sm:text-2xl text-charcoal/90 leading-relaxed">
+                    <p className="text-editorial text-xl sm:text-2xl text-black/90 leading-relaxed">
                       Based in Nottingham, we produce and organise festivals,
                       events and projects for all ages. Over 19 productive years
                       of Hustling we&rsquo;ve come together countless times to
@@ -136,7 +122,7 @@ export default function WhatWeDoPage() {
                   </AnimatedReveal>
 
                   <AnimatedReveal delay={0.3}>
-                    <p className="text-editorial text-xl sm:text-2xl text-charcoal/90 leading-relaxed">
+                    <p className="text-editorial text-xl sm:text-2xl text-black/90 leading-relaxed">
                       Through our festivals, fundraising, green initiatives,
                       schools projects, music, art, poetry, digital media, and
                       whatever else we can help happen, we hope to bring people
@@ -147,13 +133,13 @@ export default function WhatWeDoPage() {
                   {/* Call to action */}
                   <AnimatedReveal delay={0.4}>
                     <div className="pt-4">
-                      <p className="text-display text-2xl sm:text-3xl md:text-4xl text-charcoal leading-tight">
+                      <p className="text-display text-2xl sm:text-3xl md:text-4xl text-black leading-tight">
                         Talk to us.
                         <br />
                         We want to hear it.
                       </p>
                       <span
-                        className="inline-block mt-4 text-orange text-3xl"
+                        className="inline-block mt-4 text-blue text-3xl"
                         aria-hidden="true"
                       >
                         &#x2731;
@@ -168,16 +154,16 @@ export default function WhatWeDoPage() {
                 <AnimatedReveal direction="right" delay={0.3}>
                   <div className="relative">
                     {/* Image placeholder */}
-                    <div className="editorial-image aspect-[4/5] w-full bg-cream rounded-sm overflow-hidden">
+                    <div className="editorial-image aspect-[4/5] w-full bg-grey rounded-sm overflow-hidden">
                       <div className="flex h-full w-full items-center justify-center">
                         <div className="text-center">
                           <span
-                            className="block text-charcoal/10 text-[8rem] leading-none select-none"
+                            className="block text-black/10 text-[8rem] leading-none select-none"
                             aria-hidden="true"
                           >
                             &#x2731;
                           </span>
-                          <span className="text-mono text-charcoal/20 mt-4 block">
+                          <span className="text-sm tracking-wide uppercase text-black/20 mt-4 block">
                             Image placeholder
                           </span>
                         </div>
@@ -186,7 +172,7 @@ export default function WhatWeDoPage() {
 
                     {/* Decorative offset box */}
                     <div
-                      className="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-sm bg-teal/10 hidden lg:block"
+                      className="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-sm bg-blue/10 hidden lg:block"
                       aria-hidden="true"
                     />
                   </div>
@@ -194,8 +180,8 @@ export default function WhatWeDoPage() {
 
                 {/* Pull quote */}
                 <AnimatedReveal delay={0.5}>
-                  <div className="mt-12 border-l-2 border-orange pl-6">
-                    <p className="text-editorial text-charcoal/60 text-base sm:text-lg italic leading-relaxed">
+                  <div className="mt-12 border-l-2 border-blue pl-6">
+                    <p className="text-editorial text-black/60 text-base sm:text-lg italic leading-relaxed">
                       &ldquo;Feasts for the eyes, ears, brains, and
                       bellies.&rdquo;
                     </p>
@@ -207,10 +193,10 @@ export default function WhatWeDoPage() {
         </section>
 
         {/* ── Festivals Section ── */}
-        <section className="relative px-6 py-24 sm:px-12 lg:px-20 lg:py-32 bg-cream overflow-hidden">
+        <section className="relative px-6 py-24 sm:px-12 lg:px-20 lg:py-32 bg-grey overflow-hidden">
           {/* Background decorative brace */}
           <div
-            className="pointer-events-none absolute left-8 bottom-12 select-none text-teal opacity-[0.05] hidden lg:block"
+            className="pointer-events-none absolute left-8 bottom-12 select-none text-blue opacity-[0.05] hidden lg:block"
             aria-hidden="true"
             style={{
               fontFamily:
@@ -225,13 +211,13 @@ export default function WhatWeDoPage() {
 
           <div className="relative mx-auto max-w-[1500px]">
             <AnimatedReveal>
-              <span className="text-mono text-charcoal/40 mb-6 block">
+              <span className="text-sm tracking-wide uppercase text-black/40 mb-6 block">
                 &#x2731; Our Festivals
               </span>
             </AnimatedReveal>
 
             <AnimatedReveal delay={0.1}>
-              <h2 className="text-display text-[clamp(2rem,6vw,5rem)] text-charcoal mb-16 leading-[0.9]">
+              <h2 className="text-display text-[clamp(2rem,6vw,5rem)] text-black mb-16 leading-[0.9]">
                 Four festivals,
                 <br />
                 one collective.
@@ -269,12 +255,12 @@ export default function WhatWeDoPage() {
 
                       <div>
                         <h3
-                          className="text-display text-xl sm:text-2xl text-charcoal leading-tight"
+                          className="text-display text-xl sm:text-2xl text-black leading-tight"
                           style={{ letterSpacing: "-0.02em" }}
                         >
                           {festival.name}
                         </h3>
-                        <p className="text-editorial mt-2 text-charcoal/60 text-base">
+                        <p className="text-editorial mt-2 text-black/60 text-base">
                           {festival.description}
                         </p>
                       </div>
@@ -287,19 +273,19 @@ export default function WhatWeDoPage() {
         </section>
 
         {/* ── Programmes Section ── */}
-        <section className="relative px-6 py-24 sm:px-12 lg:px-20 lg:py-32 bg-off-white overflow-hidden">
+        <section className="relative px-6 py-24 sm:px-12 lg:px-20 lg:py-32 bg-grey overflow-hidden">
           <div className="mx-auto max-w-[1500px]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
               {/* Left heading */}
               <div className="lg:col-span-5">
                 <AnimatedReveal>
-                  <span className="text-mono text-charcoal/40 mb-6 block">
+                  <span className="text-sm tracking-wide uppercase text-black/40 mb-6 block">
                     &#x2731; Programmes
                   </span>
                 </AnimatedReveal>
 
                 <AnimatedReveal delay={0.1}>
-                  <h2 className="text-display text-[clamp(2rem,5vw,4rem)] text-charcoal leading-[0.9]">
+                  <h2 className="text-display text-[clamp(2rem,5vw,4rem)] text-black leading-[0.9]">
                     Beyond
                     <br />
                     the festivals.
@@ -307,7 +293,7 @@ export default function WhatWeDoPage() {
                 </AnimatedReveal>
 
                 <AnimatedReveal delay={0.2}>
-                  <p className="text-editorial mt-6 text-charcoal/60 text-lg max-w-md">
+                  <p className="text-editorial mt-6 text-black/60 text-lg max-w-md">
                     Our work extends year-round through dedicated programmes
                     that invest in people, creativity, and community.
                   </p>
@@ -319,25 +305,28 @@ export default function WhatWeDoPage() {
                 <div className="space-y-6">
                   {programmes.map((programme, index) => (
                     <AnimatedReveal
-                      key={programme.name}
+                      key={programme.slug}
                       direction="right"
                       delay={0.15 + index * 0.1}
                     >
-                      <div className="group flex items-start gap-6 border-b border-charcoal/10 pb-6 transition-colors duration-300 hover:border-orange/30">
+                      <Link
+                        href={`/programmes/${programme.slug}`}
+                        className="group flex items-start gap-6 border-b border-black/10 pb-6 transition-colors duration-300 hover:border-blue/30"
+                      >
                         {/* Number */}
-                        <span className="text-display text-4xl sm:text-5xl text-charcoal/10 leading-none transition-colors duration-300 group-hover:text-orange/30">
+                        <span className="text-display text-4xl sm:text-5xl text-black/10 leading-none transition-colors duration-300 group-hover:text-blue/30">
                           {String(index + 1).padStart(2, "0")}
                         </span>
 
                         <div>
-                          <h3 className="text-display text-lg sm:text-xl text-charcoal leading-tight">
+                          <h3 className="text-display text-lg sm:text-xl text-black leading-tight transition-colors duration-300 group-hover:text-blue">
                             {programme.name}
                           </h3>
-                          <p className="text-editorial mt-2 text-charcoal/60 text-base">
-                            {programme.description}
+                          <p className="text-editorial mt-2 text-black/60 text-base">
+                            {programme.tagline}
                           </p>
                         </div>
-                      </div>
+                      </Link>
                     </AnimatedReveal>
                   ))}
                 </div>
@@ -347,10 +336,10 @@ export default function WhatWeDoPage() {
         </section>
 
         {/* ── Closing CTA Section ── */}
-        <section className="relative px-6 py-24 sm:px-12 lg:px-20 lg:py-32 bg-charcoal overflow-hidden">
+        <section className="relative px-6 py-24 sm:px-12 lg:px-20 lg:py-32 bg-black overflow-hidden">
           {/* Decorative asterisks */}
           <div
-            className="pointer-events-none absolute right-12 top-12 select-none text-orange opacity-10 hidden lg:block"
+            className="pointer-events-none absolute right-12 top-12 select-none text-blue opacity-10 hidden lg:block"
             aria-hidden="true"
             style={{ fontSize: "12rem", lineHeight: 1 }}
           >
@@ -359,7 +348,7 @@ export default function WhatWeDoPage() {
 
           <div className="relative mx-auto max-w-[1500px] text-center">
             <AnimatedReveal>
-              <span className="text-mono text-white/30 mb-10 block">
+              <span className="text-sm tracking-wide uppercase text-white/30 mb-10 block">
                 &#x2731; Get involved
               </span>
             </AnimatedReveal>
@@ -379,7 +368,7 @@ export default function WhatWeDoPage() {
             <AnimatedReveal delay={0.35}>
               <a
                 href="/get-in-touch"
-                className="inline-block border border-white/20 px-10 py-4 text-mono text-white transition-all duration-300 hover:border-orange hover:bg-orange hover:text-white"
+                className="inline-block border border-white/20 px-10 py-4 text-sm tracking-wide uppercase text-white transition-all duration-300 hover:border-blue hover:bg-blue hover:text-white"
               >
                 Get in touch &rarr;
               </a>
@@ -392,11 +381,11 @@ export default function WhatWeDoPage() {
                 aria-hidden="true"
               >
                 <span className="h-px w-16 bg-white/10" />
-                <span className="text-orange text-xl">&#x2731;</span>
+                <span className="text-blue text-xl">&#x2731;</span>
                 <span className="h-px w-16 bg-white/10" />
-                <span className="text-orange text-xl">&#x2731;</span>
+                <span className="text-blue text-xl">&#x2731;</span>
                 <span className="h-px w-16 bg-white/10" />
-                <span className="text-orange text-xl">&#x2731;</span>
+                <span className="text-blue text-xl">&#x2731;</span>
                 <span className="h-px w-16 bg-white/10" />
               </div>
             </AnimatedReveal>

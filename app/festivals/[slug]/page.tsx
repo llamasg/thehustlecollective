@@ -25,7 +25,7 @@ export async function generateMetadata({
 
   return {
     title: `${festival.name} — The Hustle Collective`,
-    description: festival.description,
+    description: festival.intro,
     keywords: [
       festival.name,
       "Nottingham festival",

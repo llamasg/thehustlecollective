@@ -24,20 +24,12 @@
 }
 
 @theme inline {
-  --color-cream: #f5f0e8;
-  --color-charcoal: #000000;
-  --color-charcoal-light: #111111;
-  --color-teal: #1a8a8a;
-  --color-teal-deep: #0d6b6b;
-  --color-orange: #e85d26;
-  --color-orange-light: #ff7a45;
+  --color-grey: #e9eae9;
+  --color-black: #000000;
+  --color-blue: #174af4;
   --color-white: #ffffff;
-  --color-off-white: #fafaf7;
 
   --font-helvetica: "Helvetica Now", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-display: var(--font-helvetica);
-  --font-body: var(--font-helvetica);
-  --font-mono: "Space Mono", "JetBrains Mono", monospace;
 }
 
 /* ── Base ── */
@@ -48,99 +40,36 @@ html {
 }
 
 body {
-  background: var(--color-off-white);
-  color: var(--color-charcoal);
-  font-family: var(--font-body), "Helvetica Neue", Helvetica, Arial, sans-serif;
-  line-height: 1.6;
+  background: var(--color-white);
+  color: var(--color-black);
+  font-family: var(--font-helvetica);
+  line-height: 1.4;
   overflow-x: hidden;
-}
-
-/* ── Typography scales ── */
-.text-display {
-  font-family: var(--font-display), "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.03em;
-  line-height: 0.9;
-}
-
-.text-editorial {
-  font-family: var(--font-body), "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: 300;
-  line-height: 1.7;
-  letter-spacing: 0.01em;
-}
-
-.text-mono {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-weight: 400;
-}
-
-/* ── Decorative brand elements ── */
-.brand-asterisk::before {
-  content: "✱";
-  color: var(--color-orange);
-  margin-right: 0.5em;
-}
-
-.brand-brace-open::before {
-  content: "{";
-  font-weight: 100;
-  font-size: 3em;
-  line-height: 0;
-  color: var(--color-teal);
-  opacity: 0.3;
-}
-
-.brand-brace-close::after {
-  content: "}";
-  font-weight: 100;
-  font-size: 3em;
-  line-height: 0;
-  color: var(--color-teal);
-  opacity: 0.3;
 }
 
 /* ── Selection ── */
 ::selection {
-  background: var(--color-orange);
+  background: var(--color-blue);
   color: white;
 }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-cream);
+  background: var(--color-grey);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-charcoal);
-  border-radius: 3px;
+  background: var(--color-black);
 }
 
-/* ── Image treatment ── */
-.editorial-image {
-  position: relative;
-  overflow: hidden;
-}
-
-.editorial-image img {
-  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.editorial-image:hover img {
-  transform: scale(1.05);
-}
-
-/* ── Diagonal label ── */
-.diagonal-label {
-  transform: rotate(-90deg);
-  transform-origin: left bottom;
-  white-space: nowrap;
+/* ── Label utility ── */
+.text-mono {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 400;
 }

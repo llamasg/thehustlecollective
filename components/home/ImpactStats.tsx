@@ -4,79 +4,57 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
 const stats = [
-  { value: "£250k+", label: "Raised for Nottinghamshire charities since 2006" },
-  { value: "19", label: "Years of community festivals" },
-  { value: "50+", label: "Venues activated across Nottingham" },
-  { value: "450+", label: "Performers at each Hockley Hustle" },
-  { value: "10,000", label: "Trees planted through Green Hustle" },
-  { value: "20+", label: "Local charities supported" },
+  { value: "\u00a3250k+", label: "Raised for charity" },
+  { value: "19", label: "Years running" },
+  { value: "50+", label: "Venues activated" },
+  { value: "450+", label: "Performers" },
+  { value: "10,000", label: "Trees planted" },
+  { value: "20+", label: "Charities supported" },
 ];
 
-function AnimatedStat({
-  value,
-  label,
-  index,
-}: {
-  value: string;
-  label: string;
-  index: number;
-}) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{
-        duration: 0.7,
-        delay: index * 0.1,
-        ease: [0.25, 0.46, 0.45, 0.94] as const,
-      }}
-      className={`group relative ${
-        index % 3 === 1 ? "lg:mt-16" : index % 3 === 2 ? "lg:mt-32" : ""
-      }`}
-    >
-      {index === 0 && (
-        <span className="absolute -left-8 -top-4 text-8xl font-thin text-teal/10 hidden lg:block select-none">
-          &#123;
-        </span>
-      )}
-
-      <div className="border-l-2 border-charcoal/10 pl-6 py-4 transition-colors group-hover:border-orange">
-        <span className="text-display block text-[clamp(2.5rem,5vw,5rem)] text-charcoal leading-none">
-          {value}
-        </span>
-        <span className="text-mono mt-3 block text-charcoal/60">{label}</span>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function ImpactStats() {
-  return (
-    <section className="relative bg-off-white overflow-hidden">
-      <div className="max-w-[1500px] mx-auto px-6 py-24 sm:px-12 lg:px-20 lg:py-40">
-        <motion.span
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-mono text-charcoal/40 mb-12 block"
-        >
-          ✱ Impact in numbers
-        </motion.span>
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+  return (
+    <section ref={ref} className="bg-white border-t border-black/10">
+      <div className="max-w-[1500px] mx-auto px-6 sm:px-10 lg:px-16 py-20 lg:py-28">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          className="text-[11px] uppercase tracking-[0.2em] text-black/40 mb-12"
+        >
+          Impact
+        </motion.p>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-10 gap-x-6">
           {stats.map((stat, i) => (
-            <AnimatedStat key={stat.label} {...stat} index={i} />
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{
+                duration: 0.5,
+                delay: i * 0.08,
+                ease: [0.25, 0.46, 0.45, 0.94] as const,
+              }}
+            >
+              <span
+                className="block text-black leading-none tracking-[-0.03em]"
+                style={{
+                  fontSize: "clamp(2rem, 3.5vw, 3rem)",
+                  fontWeight: 300,
+                }}
+              >
+                {stat.value}
+              </span>
+              <span className="mt-2 block text-[11px] uppercase tracking-[0.15em] text-black/40">
+                {stat.label}
+              </span>
+            </motion.div>
           ))}
         </div>
       </div>
-
-      <span className="absolute right-12 bottom-20 text-[12rem] font-thin text-teal/5 hidden lg:block select-none leading-none">
-        &#125;
-      </span>
     </section>
   );
 }

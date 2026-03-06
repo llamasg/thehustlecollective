@@ -124,12 +124,12 @@ export default function GetInTouchPage() {
   return (
     <>
       <Navbar />
-      <main className="bg-off-white min-h-screen">
+      <main className="bg-grey min-h-screen">
         {/* ── Hero Section ── */}
-        <section className="relative overflow-hidden bg-charcoal pt-32 pb-20 md:pt-40 md:pb-28">
+        <section className="relative overflow-hidden bg-black pt-32 pb-20 md:pt-40 md:pb-28">
           {/* Decorative background asterisks */}
           <motion.span
-            className="pointer-events-none absolute top-16 right-12 select-none text-orange/[0.07]"
+            className="pointer-events-none absolute top-16 right-12 select-none text-blue/[0.07]"
             style={{ fontSize: "18rem", lineHeight: 1 }}
             aria-hidden="true"
             initial={{ opacity: 0, rotate: -20 }}
@@ -139,7 +139,7 @@ export default function GetInTouchPage() {
             &#x2731;
           </motion.span>
           <motion.span
-            className="pointer-events-none absolute bottom-8 left-8 select-none text-teal/[0.08]"
+            className="pointer-events-none absolute bottom-8 left-8 select-none text-blue/[0.08]"
             style={{ fontSize: "10rem", lineHeight: 1 }}
             aria-hidden="true"
             initial={{ opacity: 0, rotate: 20 }}
@@ -151,7 +151,7 @@ export default function GetInTouchPage() {
 
           <div className="relative mx-auto max-w-[1500px] px-6 md:px-12 lg:px-20">
             <motion.h1
-              className="text-display text-cream text-5xl sm:text-7xl md:text-8xl lg:text-9xl"
+              className="text-display text-white text-5xl sm:text-7xl md:text-8xl lg:text-9xl"
               custom={0}
               variants={fadeUp}
               initial="hidden"
@@ -169,14 +169,14 @@ export default function GetInTouchPage() {
               initial="hidden"
               animate="visible"
             >
-              <span className="text-orange text-xl" aria-hidden="true">
+              <span className="text-blue text-xl" aria-hidden="true">
                 &#x2731;
               </span>
-              <span className="h-px w-16 bg-cream/20" />
+              <span className="h-px w-16 bg-white/20" />
             </motion.div>
 
             <motion.p
-              className="text-editorial mt-6 max-w-2xl text-cream/70 text-lg md:text-xl"
+              className="text-editorial mt-6 max-w-2xl text-white/70 text-lg md:text-xl"
               custom={0.35}
               variants={fadeUp}
               initial="hidden"
@@ -193,7 +193,7 @@ export default function GetInTouchPage() {
         <section className="relative py-20 md:py-28">
           {/* Subtle decorative asterisk */}
           <motion.span
-            className="pointer-events-none absolute top-12 right-20 hidden select-none text-orange/[0.06] lg:block"
+            className="pointer-events-none absolute top-12 right-20 hidden select-none text-blue/[0.06] lg:block"
             style={{ fontSize: "8rem", lineHeight: 1 }}
             aria-hidden="true"
             custom={0.5}
@@ -215,7 +215,7 @@ export default function GetInTouchPage() {
                 viewport={{ once: true, margin: "-50px" }}
               >
                 <motion.span
-                  className="text-mono mb-6 block text-charcoal/40"
+                  className="text-sm tracking-wide uppercase mb-6 block text-black/40"
                   variants={staggerItem}
                 >
                   Contact Details
@@ -223,10 +223,10 @@ export default function GetInTouchPage() {
 
                 {/* Email */}
                 <motion.div className="mb-10" variants={staggerItem}>
-                  <p className="text-mono mb-2 text-charcoal/50">Email</p>
+                  <p className="text-sm tracking-wide uppercase mb-2 text-black/50">Email</p>
                   <a
                     href="mailto:hello@hockleyhustle.co.uk"
-                    className="text-xl font-medium text-charcoal transition-colors duration-200 hover:text-orange md:text-2xl"
+                    className="text-xl font-medium text-black transition-colors duration-200 hover:text-blue md:text-2xl"
                     style={{ fontWeight: 500 }}
                   >
                     hello@hockleyhustle.co.uk
@@ -235,9 +235,9 @@ export default function GetInTouchPage() {
 
                 {/* Address */}
                 <motion.div className="mb-10" variants={staggerItem}>
-                  <p className="text-mono mb-2 text-charcoal/50">Address</p>
+                  <p className="text-sm tracking-wide uppercase mb-2 text-black/50">Address</p>
                   <address
-                    className="text-lg not-italic leading-relaxed text-charcoal/80 md:text-xl"
+                    className="text-lg not-italic leading-relaxed text-black/80 md:text-xl"
                     style={{ fontWeight: 300 }}
                   >
                     Fisher Gate Point
@@ -250,7 +250,7 @@ export default function GetInTouchPage() {
 
                 {/* Social */}
                 <motion.div className="mb-10" variants={staggerItem}>
-                  <p className="text-mono mb-4 text-charcoal/50">Follow Us</p>
+                  <p className="text-sm tracking-wide uppercase mb-4 text-black/50">Follow Us</p>
                   <div className="flex items-center gap-5">
                     {socialLinks.map((social) => (
                       <a
@@ -258,7 +258,7 @@ export default function GetInTouchPage() {
                         href={social.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center gap-2.5 text-charcoal/70 transition-colors duration-200 hover:text-orange"
+                        className="group flex items-center gap-2.5 text-black/70 transition-colors duration-200 hover:text-blue"
                         aria-label={`Follow us on ${social.label}`}
                       >
                         <span className="transition-transform duration-200 group-hover:scale-110">
@@ -281,22 +281,22 @@ export default function GetInTouchPage() {
                   variants={staggerItem}
                   aria-hidden="true"
                 >
-                  <span className="text-orange text-sm">&#x2731;</span>
-                  <span className="h-px w-24 bg-charcoal/10" />
-                  <span className="text-orange text-sm">&#x2731;</span>
+                  <span className="text-blue text-sm">&#x2731;</span>
+                  <span className="h-px w-24 bg-black/10" />
+                  <span className="text-blue text-sm">&#x2731;</span>
                 </motion.div>
 
                 {/* Warm aside */}
                 <motion.div
-                  className="mt-8 border-l-2 border-teal/30 pl-5"
+                  className="mt-8 border-l-2 border-blue/30 pl-5"
                   variants={staggerItem}
                 >
                   <p
-                    className="text-editorial text-charcoal/50 text-sm leading-relaxed md:text-base"
+                    className="text-editorial text-black/50 text-sm leading-relaxed md:text-base"
                   >
                     We&rsquo;re a small team with big ideas. We read every
                     message and do our best to reply within a few working days.
-                    <span className="text-orange" aria-hidden="true">
+                    <span className="text-blue" aria-hidden="true">
                       {" "}
                       &#x2731;
                     </span>
@@ -315,20 +315,20 @@ export default function GetInTouchPage() {
                   ease: [0.25, 0.46, 0.45, 0.94] as const,
                 }}
               >
-                <span className="text-mono mb-6 block text-charcoal/40">
+                <span className="text-sm tracking-wide uppercase mb-6 block text-black/40">
                   Send a Message
                 </span>
 
                 {submitted ? (
                   /* ── Success state ── */
                   <motion.div
-                    className="flex flex-col items-start rounded-2xl bg-cream/60 px-8 py-12 md:px-10 md:py-16"
+                    className="flex flex-col items-start rounded-2xl bg-grey/60 px-8 py-12 md:px-10 md:py-16"
                     initial={{ opacity: 0, scale: 0.96 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const }}
                   >
                     <motion.span
-                      className="mb-4 text-4xl text-orange"
+                      className="mb-4 text-4xl text-blue"
                       initial={{ rotate: -90, opacity: 0 }}
                       animate={{ rotate: 0, opacity: 1 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
@@ -336,18 +336,18 @@ export default function GetInTouchPage() {
                       &#x2731;
                     </motion.span>
                     <h2
-                      className="text-display mb-3 text-2xl text-charcoal md:text-3xl"
+                      className="text-display mb-3 text-2xl text-black md:text-3xl"
                     >
                       MESSAGE SENT
                     </h2>
-                    <p className="text-editorial mb-8 max-w-md text-charcoal/60">
+                    <p className="text-editorial mb-8 max-w-md text-black/60">
                       Thanks for reaching out! We&rsquo;ll get back to you as
                       soon as we can. In the meantime, follow us on social media
                       for the latest updates.
                     </p>
                     <button
                       onClick={() => setSubmitted(false)}
-                      className="text-mono cursor-pointer text-teal transition-colors duration-200 hover:text-orange"
+                      className="text-sm tracking-wide uppercase cursor-pointer text-blue transition-colors duration-200 hover:text-blue"
                     >
                       Send another message &rarr;
                     </button>
@@ -359,7 +359,7 @@ export default function GetInTouchPage() {
                     <div>
                       <label
                         htmlFor="contact-name"
-                        className="text-mono mb-3 block text-charcoal/50"
+                        className="text-sm tracking-wide uppercase mb-3 block text-black/50"
                       >
                         Your Name
                       </label>
@@ -371,7 +371,7 @@ export default function GetInTouchPage() {
                         value={formState.name}
                         onChange={handleChange}
                         placeholder="e.g. Robin Hood"
-                        className="w-full border-0 border-b-2 border-charcoal/15 bg-transparent py-3 text-charcoal placeholder:text-charcoal/25 transition-colors duration-200 outline-none focus:border-orange"
+                        className="w-full border-0 border-b-2 border-black/15 bg-transparent py-3 text-black placeholder:text-black/25 transition-colors duration-200 outline-none focus:border-blue"
                         style={{ fontSize: "1.05rem", fontWeight: 400 }}
                       />
                     </div>
@@ -380,7 +380,7 @@ export default function GetInTouchPage() {
                     <div>
                       <label
                         htmlFor="contact-email"
-                        className="text-mono mb-3 block text-charcoal/50"
+                        className="text-sm tracking-wide uppercase mb-3 block text-black/50"
                       >
                         Your Email
                       </label>
@@ -392,7 +392,7 @@ export default function GetInTouchPage() {
                         value={formState.email}
                         onChange={handleChange}
                         placeholder="robin@sherwood.co.uk"
-                        className="w-full border-0 border-b-2 border-charcoal/15 bg-transparent py-3 text-charcoal placeholder:text-charcoal/25 transition-colors duration-200 outline-none focus:border-orange"
+                        className="w-full border-0 border-b-2 border-black/15 bg-transparent py-3 text-black placeholder:text-black/25 transition-colors duration-200 outline-none focus:border-blue"
                         style={{ fontSize: "1.05rem", fontWeight: 400 }}
                       />
                     </div>
@@ -401,7 +401,7 @@ export default function GetInTouchPage() {
                     <div>
                       <label
                         htmlFor="contact-message"
-                        className="text-mono mb-3 block text-charcoal/50"
+                        className="text-sm tracking-wide uppercase mb-3 block text-black/50"
                       >
                         Your Message
                       </label>
@@ -413,7 +413,7 @@ export default function GetInTouchPage() {
                         value={formState.message}
                         onChange={handleChange}
                         placeholder="Tell us what you're thinking..."
-                        className="w-full resize-none border-0 border-b-2 border-charcoal/15 bg-transparent py-3 text-charcoal placeholder:text-charcoal/25 transition-colors duration-200 outline-none focus:border-orange"
+                        className="w-full resize-none border-0 border-b-2 border-black/15 bg-transparent py-3 text-black placeholder:text-black/25 transition-colors duration-200 outline-none focus:border-blue"
                         style={{ fontSize: "1.05rem", fontWeight: 400 }}
                       />
                     </div>
@@ -422,7 +422,7 @@ export default function GetInTouchPage() {
                     <motion.button
                       type="submit"
                       disabled={sending}
-                      className="group relative w-full cursor-pointer overflow-hidden rounded-md bg-orange px-8 py-4 text-white transition-all duration-300 hover:bg-orange-light disabled:opacity-70 sm:w-auto"
+                      className="group relative w-full cursor-pointer overflow-hidden rounded-md bg-blue px-8 py-4 text-white transition-all duration-300 hover:bg-blue disabled:opacity-70 sm:w-auto"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -464,8 +464,8 @@ export default function GetInTouchPage() {
                     </motion.button>
 
                     {/* Privacy note */}
-                    <p className="text-mono mt-2 text-charcoal/30">
-                      <span className="text-orange" aria-hidden="true">
+                    <p className="text-sm tracking-wide uppercase mt-2 text-black/30">
+                      <span className="text-blue" aria-hidden="true">
                         &#x2731;
                       </span>{" "}
                       We&rsquo;ll never share your details with third parties.

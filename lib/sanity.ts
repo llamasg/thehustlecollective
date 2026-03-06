@@ -1,8 +1,7 @@
 import { createClient } from 'next-sanity'
 import { apiVersion, dataset, projectId } from '@/sanity/env'
 
-// Create client only if projectId is available
-const client = projectId
+export const client = projectId
   ? createClient({
       projectId,
       dataset,
@@ -35,7 +34,13 @@ export const postBySlugQuery = `
     category,
     excerpt,
     mainImage,
-    body,
+    body[] {
+      ...,
+      _type == "image" => {
+        ...,
+        asset->
+      }
+    },
     author
   }
 `
@@ -53,6 +58,10 @@ export const latestPostsQuery = `
   }
 `
 
+export const postSlugsQuery = `
+  *[_type == "blogPost" && defined(slug.current)].slug.current
+`
+
 // ── Helper Types ──
 
 export interface BlogPost {
@@ -66,7 +75,8 @@ export interface BlogPost {
     asset: { _ref: string }
     alt?: string
   }
-  body?: unknown[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body?: any[]
   author?: string
 }
 
@@ -74,15 +84,20 @@ export interface BlogPost {
 
 export async function getAllPosts(): Promise<BlogPost[]> {
   if (!client) return []
-  return client.fetch<BlogPost[]>(allPostsQuery)
+  return client.fetch<BlogPost[]>(allPostsQuery, {}, { next: { tags: ['blogPost'] } })
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   if (!client) return null
-  return client.fetch<BlogPost | null>(postBySlugQuery, { slug })
+  return client.fetch<BlogPost | null>(postBySlugQuery, { slug }, { next: { tags: ['blogPost'] } })
 }
 
 export async function getLatestPosts(): Promise<BlogPost[]> {
   if (!client) return []
-  return client.fetch<BlogPost[]>(latestPostsQuery)
+  return client.fetch<BlogPost[]>(latestPostsQuery, {}, { next: { tags: ['blogPost'] } })
+}
+
+export async function getAllPostSlugs(): Promise<string[]> {
+  if (!client) return []
+  return client.fetch<string[]>(postSlugsQuery, {}, { next: { tags: ['blogPost'] } })
 }

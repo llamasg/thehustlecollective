@@ -1,16 +1,18 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
+import { PortableText, PortableTextComponents } from "@portabletext/react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { getAllPosts, getPostBySlug, type BlogPost } from "@/lib/sanity";
+import { getAllPostSlugs, getPostBySlug, type BlogPost } from "@/lib/sanity";
+import { urlFor } from "@/sanity/lib/image";
 
-// ── Category color map ──
 const categoryColors: Record<string, string> = {
-  Opportunity: "bg-orange",
-  News: "bg-teal",
-  Recap: "bg-charcoal",
-  Announcement: "bg-teal-deep",
+  Opportunity: "bg-blue",
+  News: "bg-blue",
+  Recap: "bg-black",
+  Announcement: "bg-blue",
 };
 
 function formatDate(dateString: string): string {
@@ -21,15 +23,100 @@ function formatDate(dateString: string): string {
   });
 }
 
+const portableTextComponents: PortableTextComponents = {
+  block: {
+    h2: ({ children }) => (
+      <h2 className="text-display text-2xl sm:text-3xl text-black mt-12 mb-6">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className="text-display text-xl sm:text-2xl text-black mt-10 mb-4">
+        {children}
+      </h3>
+    ),
+    h4: ({ children }) => (
+      <h4 className="text-display text-lg sm:text-xl text-black mt-8 mb-3">
+        {children}
+      </h4>
+    ),
+    normal: ({ children }) => (
+      <p className="text-editorial text-black/75 text-lg leading-[1.85] mb-6">
+        {children}
+      </p>
+    ),
+    blockquote: ({ children }) => (
+      <blockquote className="my-10 border-l-[3px] border-blue py-2 pl-8">
+        <p className="text-editorial text-xl italic leading-[1.6] text-blue">
+          {children}
+        </p>
+      </blockquote>
+    ),
+  },
+  marks: {
+    strong: ({ children }) => (
+      <strong className="font-semibold text-black/90">{children}</strong>
+    ),
+    em: ({ children }) => <em className="italic">{children}</em>,
+    link: ({ value, children }) => (
+      <a
+        href={value?.href}
+        target={value?.href?.startsWith("http") ? "_blank" : undefined}
+        rel={value?.href?.startsWith("http") ? "noopener noreferrer" : undefined}
+        className="text-blue underline decoration-blue/30 underline-offset-4 transition-colors duration-200 hover:decoration-blue"
+      >
+        {children}
+      </a>
+    ),
+  },
+  list: {
+    bullet: ({ children }) => (
+      <ul className="my-6 space-y-2 pl-6 list-disc text-editorial text-black/70 text-lg leading-[1.85]">
+        {children}
+      </ul>
+    ),
+    number: ({ children }) => (
+      <ol className="my-6 space-y-2 pl-6 list-decimal text-editorial text-black/70 text-lg leading-[1.85]">
+        {children}
+      </ol>
+    ),
+  },
+  listItem: {
+    bullet: ({ children }) => <li>{children}</li>,
+    number: ({ children }) => <li>{children}</li>,
+  },
+  types: {
+    image: ({ value }) => {
+      if (!value?.asset) return null;
+      const imageUrl = urlFor(value).width(1200).url();
+      return (
+        <figure className="my-10">
+          <div className="relative aspect-[16/10] overflow-hidden bg-black/5">
+            <Image
+              src={imageUrl}
+              alt={value.alt || ""}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 720px"
+            />
+          </div>
+          {value.caption && (
+            <figcaption className="mt-3 text-center text-sm text-black/40">
+              {value.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+    },
+  },
+};
+
 // ── Generate static params ──
 export async function generateStaticParams() {
   try {
-    const posts = await getAllPosts();
-    return posts.map((post) => ({
-      slug: post.slug.current,
-    }));
+    const slugs = await getAllPostSlugs();
+    return slugs.map((slug) => ({ slug }));
   } catch {
-    // Sanity not configured or no posts yet — return empty
     return [];
   }
 }
@@ -46,19 +133,24 @@ export async function generateMetadata({
     const post = await getPostBySlug(slug);
 
     if (!post) {
-      return { title: "Post Not Found — The Hustle Collective" };
+      return { title: "Post Not Found - The Hustle Collective" };
     }
 
+    const ogImage = post.mainImage?.asset
+      ? urlFor(post.mainImage).width(1200).height(630).url()
+      : undefined;
+
     return {
-      title: `${post.title} — The Hustle Collective`,
+      title: `${post.title} - The Hustle Collective`,
       description: post.excerpt || `Read ${post.title} on The Hustle Collective blog.`,
       openGraph: {
-        title: `${post.title} — The Hustle Collective`,
+        title: `${post.title} - The Hustle Collective`,
         description: post.excerpt,
+        images: ogImage ? [ogImage] : undefined,
       },
     };
   } catch {
-    return { title: "Blog — The Hustle Collective" };
+    return { title: "Blog - The Hustle Collective" };
   }
 }
 
@@ -82,15 +174,18 @@ export default async function BlogPostPage({
     notFound();
   }
 
+  const heroImageUrl = post.mainImage?.asset
+    ? urlFor(post.mainImage).width(1400).height(700).url()
+    : null;
+
   return (
     <>
       <Navbar />
       <main>
         {/* ── Hero / Header ── */}
-        <section className="relative bg-charcoal pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
-          {/* Decorative brace */}
+        <section className="relative bg-black pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
           <div
-            className="pointer-events-none absolute -left-20 top-8 hidden select-none text-teal opacity-[0.05] lg:block"
+            className="pointer-events-none absolute -left-20 top-8 hidden select-none text-blue opacity-[0.05] lg:block"
             aria-hidden="true"
             style={{
               fontFamily: "var(--font-display), Helvetica, sans-serif",
@@ -103,10 +198,9 @@ export default async function BlogPostPage({
           </div>
 
           <div className="relative mx-auto max-w-[900px] px-6 md:px-12">
-            {/* Back link */}
             <Link
               href="/blog"
-              className="text-mono mb-8 inline-flex items-center gap-2 text-white/40 transition-colors duration-200 hover:text-orange"
+              className="text-sm tracking-wide uppercase mb-8 inline-flex items-center gap-2 text-white/40 transition-colors duration-200 hover:text-blue"
             >
               <svg
                 width="14"
@@ -126,17 +220,16 @@ export default async function BlogPostPage({
               Back to blog
             </Link>
 
-            {/* Meta row */}
             <div className="mb-6 flex flex-wrap items-center gap-4">
               {post.category && (
                 <span
-                  className={`inline-block rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white ${categoryColors[post.category] || "bg-charcoal-light"}`}
+                  className={`inline-block rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white ${categoryColors[post.category] || "bg-black"}`}
                 >
                   {post.category}
                 </span>
               )}
               {post.publishedAt && (
-                <span className="text-mono text-white/40">
+                <span className="text-sm tracking-wide uppercase text-white/40">
                   {formatDate(post.publishedAt)}
                 </span>
               )}
@@ -145,17 +238,15 @@ export default async function BlogPostPage({
                   <span className="text-white/20" aria-hidden="true">
                     /
                   </span>
-                  <span className="text-mono text-white/40">{post.author}</span>
+                  <span className="text-sm tracking-wide uppercase text-white/40">{post.author}</span>
                 </>
               )}
             </div>
 
-            {/* Title */}
             <h1 className="text-display text-3xl text-white sm:text-4xl md:text-5xl lg:text-6xl">
               {post.title}
             </h1>
 
-            {/* Excerpt */}
             {post.excerpt && (
               <p className="text-editorial mt-8 text-white/50 text-base md:text-lg">
                 {post.excerpt}
@@ -164,47 +255,59 @@ export default async function BlogPostPage({
           </div>
         </section>
 
+        {/* ── Hero Image ── */}
+        {heroImageUrl && (
+          <section className="bg-grey">
+            <div className="mx-auto max-w-[1100px]">
+              <div className="relative aspect-[2/1] overflow-hidden">
+                <Image
+                  src={heroImageUrl}
+                  alt={post.mainImage?.alt || post.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1100px) 100vw, 1100px"
+                  priority
+                />
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* ── Body ── */}
-        <section className="bg-off-white py-16 md:py-24">
+        <section className="bg-grey py-16 md:py-24">
           <div className="mx-auto max-w-[720px] px-6 md:px-12">
-            {/* Asterisk separator */}
             <div className="mb-12 flex items-center gap-4" aria-hidden="true">
-              <span className="text-orange text-xl">&#x2731;</span>
-              <span className="h-px flex-1 bg-charcoal/10" />
-              <span className="text-orange text-xl">&#x2731;</span>
+              <span className="text-blue text-xl">&#x2731;</span>
+              <span className="h-px flex-1 bg-black/10" />
+              <span className="text-blue text-xl">&#x2731;</span>
             </div>
 
-            {/* Body content placeholder */}
-            <div className="text-editorial text-charcoal/70 text-base md:text-lg leading-relaxed">
-              <p className="mb-6">
-                Content from Sanity CMS will appear here.
-              </p>
-              <p className="text-charcoal/40 text-sm italic">
-                This post&apos;s rich text body will be rendered using Portable
-                Text once the full renderer is configured. For now, manage
-                content in the{" "}
-                <Link
-                  href="/admin"
-                  className="text-teal underline decoration-teal/30 underline-offset-4 transition-colors duration-200 hover:text-orange"
-                >
-                  Sanity Studio
-                </Link>
-                .
-              </p>
-            </div>
+            {/* Portable Text body */}
+            {post.body && post.body.length > 0 ? (
+              <div className="portable-text">
+                <PortableText
+                  value={post.body}
+                  components={portableTextComponents}
+                />
+              </div>
+            ) : (
+              <div className="text-editorial text-black/70 text-base md:text-lg leading-relaxed">
+                <p className="text-black/40 text-sm italic">
+                  Content coming soon.
+                </p>
+              </div>
+            )}
 
-            {/* Bottom separator */}
             <div className="mt-16 flex items-center gap-4" aria-hidden="true">
-              <span className="h-px flex-1 bg-charcoal/10" />
-              <span className="text-orange text-xl">&#x2731;</span>
-              <span className="h-px flex-1 bg-charcoal/10" />
+              <span className="h-px flex-1 bg-black/10" />
+              <span className="text-blue text-xl">&#x2731;</span>
+              <span className="h-px flex-1 bg-black/10" />
             </div>
 
-            {/* Back to blog */}
             <div className="mt-12 text-center">
               <Link
                 href="/blog"
-                className="text-mono inline-flex items-center gap-2 text-teal transition-colors duration-200 hover:text-orange"
+                className="text-sm tracking-wide uppercase inline-flex items-center gap-2 text-blue transition-colors duration-200 hover:text-blue"
               >
                 <svg
                   width="14"

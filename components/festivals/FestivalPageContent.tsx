@@ -56,7 +56,6 @@ function HeroSection({ festival }: { festival: Festival }) {
 
   return (
     <section ref={ref} className="relative h-[100svh] min-h-[600px] w-full overflow-hidden">
-      {/* Parallax background image */}
       <motion.div className="absolute inset-0" style={{ y: imageY }}>
         <Image
           src={festival.heroImage}
@@ -68,19 +67,16 @@ function HeroSection({ festival }: { festival: Festival }) {
         />
       </motion.div>
 
-      {/* Dark overlay */}
       <motion.div
-        className="absolute inset-0 bg-charcoal"
+        className="absolute inset-0 bg-black"
         style={{ opacity: overlayOpacity }}
       />
 
-      {/* Color tint */}
       <div
         className="absolute inset-0 mix-blend-multiply opacity-15"
         style={{ backgroundColor: festival.accentColor }}
       />
 
-      {/* Established badge — top corner */}
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -88,30 +84,25 @@ function HeroSection({ festival }: { festival: Festival }) {
         className="absolute top-24 right-6 z-10 text-right sm:top-28 sm:right-10 lg:top-32 lg:right-16"
       >
         <span className="text-mono text-white/50">Est.</span>
-        <span
-          className="text-display mt-1 block text-5xl text-white/90 sm:text-6xl lg:text-7xl"
-        >
+        <span className="text-display mt-1 block text-5xl text-white/90 sm:text-6xl lg:text-7xl">
           {festival.established}
         </span>
       </motion.div>
 
-      {/* Main content — bottom-left */}
       <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-20 sm:px-12 lg:px-20 lg:pb-28">
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
         >
-          {/* Decorative asterisk */}
           <motion.span
             variants={fadeIn}
             className="mb-6 block text-2xl"
             style={{ color: festival.accentColor }}
           >
-            ✱
+            *
           </motion.span>
 
-          {/* Festival name — MASSIVE display type */}
           <div className="overflow-hidden">
             <motion.h1
               variants={slideUp}
@@ -131,7 +122,6 @@ function HeroSection({ festival }: { festival: Festival }) {
             </div>
           )}
 
-          {/* Tagline */}
           <motion.p
             variants={fadeUp}
             className="mt-6 max-w-xl text-lg font-light tracking-wide text-white/70 sm:text-xl lg:text-2xl"
@@ -140,7 +130,6 @@ function HeroSection({ festival }: { festival: Festival }) {
           </motion.p>
         </motion.div>
 
-        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -156,382 +145,180 @@ function HeroSection({ festival }: { festival: Festival }) {
         </motion.div>
       </div>
 
-      {/* Bottom gradient into next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-off-white to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-grey to-transparent" />
     </section>
   );
 }
 
-// ── Introduction Section ──
-function IntroductionSection({ festival }: { festival: Festival }) {
+// ── Editorial Article Section ──
+function EditorialArticle({ festival }: { festival: Festival }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const isInView = useInView(ref, { once: true, amount: 0.05 });
+
+  const getImageForIndex = (index: number): string | undefined => {
+    if (festival.galleryImages.length === 0) return undefined;
+    if (index >= festival.galleryImages.length) return undefined;
+    return festival.galleryImages[index];
+  };
+
+  // Insert pull quote after first section if 2 sections, after second if 3+
+  const pullQuoteAfter = festival.sections.length >= 3 ? 1 : 0;
 
   return (
-    <section ref={ref} className="relative bg-off-white px-6 py-24 sm:px-12 lg:px-20 lg:py-40 overflow-hidden">
-      {/* Decorative brace */}
-      <span
-        className="pointer-events-none absolute -left-8 top-24 hidden select-none text-[18rem] font-thin leading-none opacity-[0.04] lg:block"
-        style={{ color: festival.accentColor }}
-        aria-hidden="true"
-      >
-        &#123;
-      </span>
-
-      {/* Section label */}
-      <motion.span
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : {}}
-        transition={{ duration: 0.6 }}
-        className="text-mono mb-16 block text-charcoal/40"
-      >
-        ✱ About the festival
-      </motion.span>
-
-      <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-12">
-        {/* Left column — editorial body text */}
+    <section ref={ref} className="relative bg-grey overflow-hidden">
+      <div className="mx-auto max-w-7xl px-6 py-24 sm:px-12 lg:px-20 lg:py-40">
+        {/* Intro line */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.1, ease }}
-          className="lg:col-span-7"
+          transition={{ duration: 0.8, ease }}
+          className="mb-20 max-w-3xl"
         >
-          <p className="text-editorial text-charcoal/80 text-xl leading-[1.8] sm:text-2xl lg:text-[1.75rem] lg:leading-[1.8]">
-            {festival.extendedDescription}
-          </p>
-
-          {/* Pull quote accent */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.5, ease }}
-            className="mt-12 border-l-[3px] py-2 pl-8"
-            style={{ borderColor: festival.accentColor }}
+          <p
+            className="text-editorial text-black/90 leading-[1.4] tracking-[-0.01em]"
+            style={{ fontSize: "clamp(1.5rem, 3vw, 2.25rem)", fontWeight: 400 }}
           >
-            <p
-              className="text-display text-xl leading-[1.2] sm:text-2xl lg:text-3xl"
-              style={{ color: festival.accentColor }}
-            >
-              {festival.tagline}
-            </p>
-          </motion.div>
+            {festival.intro}
+          </p>
         </motion.div>
 
-        {/* Right column — stats woven into layout */}
-        <div className="lg:col-span-5 lg:pl-8">
-          <div className="flex flex-col gap-8 sm:gap-10">
+        {/* Stats grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.15, ease }}
+          className="mb-24"
+        >
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-12 gap-x-10 sm:gap-x-16 max-w-3xl mx-auto">
             {festival.stats.map((stat, i) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.2 + i * 0.08, ease }}
-                className={`group ${i % 2 === 1 ? "lg:ml-12" : ""}`}
+                transition={{ duration: 0.5, delay: 0.2 + i * 0.06, ease }}
+                className="group text-center"
               >
-                <div className="flex items-baseline gap-4">
-                  <span
-                    className="text-display text-[clamp(2.5rem,5vw,4.5rem)] leading-none"
-                    style={{ color: festival.accentColor }}
-                  >
-                    {stat.value}
-                  </span>
-                  {i === 0 && (
-                    <span
-                      className="text-lg opacity-40"
-                      style={{ color: festival.accentColor }}
-                      aria-hidden="true"
-                    >
-                      ✱
-                    </span>
-                  )}
-                </div>
-                <span className="text-mono mt-2 block text-charcoal/50">
+                <span
+                  className="text-display block text-[clamp(2rem,4vw,3rem)] leading-none"
+                  style={{ color: festival.accentColor }}
+                >
+                  {stat.value}
+                </span>
+                <span className="text-mono mt-2 block text-black/50">
                   {stat.label}
                 </span>
-                {/* Subtle underline accent */}
                 <div
-                  className="mt-3 h-px w-12 transition-all duration-500 group-hover:w-20"
+                  className="mx-auto mt-3 h-px w-12 transition-all duration-500 group-hover:w-20"
                   style={{ backgroundColor: festival.accentColor, opacity: 0.3 }}
                 />
               </motion.div>
             ))}
           </div>
+        </motion.div>
+
+        {/* Divider */}
+        <div className="mb-20 flex items-center gap-4" aria-hidden="true">
+          <span style={{ color: festival.accentColor }} className="text-xl">*</span>
+          <span className="h-px flex-1 bg-black/10" />
         </div>
-      </div>
 
-      {/* Closing brace */}
-      <span
-        className="pointer-events-none absolute -right-4 bottom-16 hidden select-none text-[14rem] font-thin leading-none opacity-[0.04] lg:block"
-        style={{ color: festival.accentColor }}
-        aria-hidden="true"
-      >
-        &#125;
-      </span>
-    </section>
-  );
-}
-
-// ── Editorial Content Section ──
-function EditorialSection({ festival }: { festival: Festival }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
-
-  const hasImages = festival.galleryImages.length > 0;
-
-  return (
-    <section ref={ref} className="relative bg-cream overflow-hidden">
-      {/* Top divider */}
-      <div className="mx-6 flex items-center gap-4 pt-20 sm:mx-12 lg:mx-20 lg:pt-32" aria-hidden="true">
-        <span style={{ color: festival.accentColor }} className="text-xl">✱</span>
-        <span className="h-px flex-1 bg-charcoal/10" />
-        <span style={{ color: festival.accentColor }} className="text-xl">✱</span>
-        <span className="h-px flex-1 bg-charcoal/10" />
-        <span style={{ color: festival.accentColor }} className="text-xl">✱</span>
-      </div>
-
-      <div className="px-6 py-16 sm:px-12 lg:px-20 lg:py-24">
-        {/* Section label */}
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          className="text-mono mb-16 block text-charcoal/40"
-        >
-          ✱ What makes it special
-        </motion.span>
-
-        {/* Asymmetric editorial grid */}
-        {hasImages && (
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
-            {/* Large featured image */}
-            {festival.galleryImages[0] && (
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, ease }}
-                className="editorial-image relative aspect-[4/5] overflow-hidden lg:col-span-7"
-              >
-                <Image
-                  src={festival.galleryImages[0]}
-                  alt={`${festival.name} gallery`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 58vw"
-                />
-                <div
-                  className="absolute inset-0 opacity-0 mix-blend-multiply transition-opacity duration-700 hover:opacity-15"
-                  style={{ backgroundColor: festival.accentColor }}
-                />
-              </motion.div>
-            )}
-
-            {/* Right column — stacked text + smaller image */}
-            <div className="flex flex-col gap-6 lg:col-span-5 lg:gap-8">
-              {/* Features list as editorial content */}
+        {/* Editorial sections with interspersed images */}
+        <div className="max-w-3xl mx-auto">
+          {festival.sections.map((section, i) => (
+            <div key={section.title}>
+              {/* Section content */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.2, ease }}
-                className="flex flex-col justify-center py-4 lg:py-8"
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.7, ease }}
+                className="mb-16"
               >
-                <span
-                  className="text-display mb-8 text-lg sm:text-xl"
-                  style={{ color: festival.accentColor }}
-                >
-                  Highlights
+                <span className="text-mono mb-6 block text-black/40">
+                  * {section.title}
                 </span>
-                <ul className="space-y-4">
-                  {festival.features.slice(0, 4).map((feature, i) => (
-                    <motion.li
-                      key={feature}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={isInView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ duration: 0.5, delay: 0.3 + i * 0.08, ease }}
-                      className="flex items-start gap-3"
+                <div className="space-y-6">
+                  {section.body.split("\n\n").map((paragraph, pi) => (
+                    <p
+                      key={pi}
+                      className="text-editorial text-black/75 text-lg leading-[1.85] sm:text-xl sm:leading-[1.85]"
                     >
-                      <span
-                        className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full"
-                        style={{ backgroundColor: festival.accentColor }}
-                      />
-                      <span className="text-editorial text-base text-charcoal/70 sm:text-lg">
-                        {feature}
-                      </span>
-                    </motion.li>
+                      {paragraph}
+                    </p>
                   ))}
-                </ul>
+                </div>
               </motion.div>
 
-              {/* Secondary image */}
-              {festival.galleryImages[1] && (
+              {/* Pull quote after designated section */}
+              {festival.pullQuote && i === pullQuoteAfter && (
+                <motion.blockquote
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.7, ease }}
+                  className="relative my-20 py-8 pl-8 border-l-[3px]"
+                  style={{ borderColor: festival.accentColor }}
+                >
+                  <p
+                    className="text-editorial text-xl italic leading-[1.6] sm:text-2xl"
+                    style={{ color: festival.accentColor }}
+                  >
+                    &ldquo;{festival.pullQuote}&rdquo;
+                  </p>
+                </motion.blockquote>
+              )}
+
+              {/* Full-bleed image break between sections */}
+              {i < festival.sections.length - 1 && getImageForIndex(i) && (
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.7, delay: 0.4, ease }}
-                  className="editorial-image relative aspect-[3/2] overflow-hidden"
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, ease }}
+                  className="relative my-20 aspect-[21/9] overflow-hidden rounded-sm"
+                  style={{ marginLeft: "calc(-50vw + 50%)", marginRight: "calc(-50vw + 50%)", maxWidth: "100vw" }}
                 >
                   <Image
-                    src={festival.galleryImages[1]}
-                    alt={`${festival.name} gallery`}
+                    src={getImageForIndex(i)!}
+                    alt={`${festival.name}`}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    sizes="100vw"
                   />
                 </motion.div>
               )}
             </div>
-          </div>
-        )}
+          ))}
+        </div>
 
-        {/* Second row — reversed asymmetry */}
-        {hasImages && festival.galleryImages.length > 2 && (
-          <div className="mt-6 grid grid-cols-1 gap-6 lg:mt-8 lg:grid-cols-12 lg:gap-8">
-            {/* Left column — pull quote + remaining features */}
-            <div className="flex flex-col gap-6 lg:col-span-5 lg:gap-8">
-              {/* Pull quote */}
-              <motion.blockquote
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.7, ease }}
-                className="relative py-8 lg:py-12"
-              >
-                <span
-                  className="absolute left-0 top-4 text-[6rem] font-thin leading-none opacity-10 lg:top-8"
-                  style={{ color: festival.accentColor }}
-                  aria-hidden="true"
-                >
-                  &ldquo;
-                </span>
-                <p className="text-editorial relative z-10 text-xl italic leading-[1.6] text-charcoal/60 sm:text-2xl">
-                  {festival.description}
-                </p>
-              </motion.blockquote>
-
-              {/* Remaining features */}
-              {festival.features.length > 4 && (
+        {/* Remaining gallery images */}
+        {festival.galleryImages.length > 0 && (
+          <div className="mt-24">
+            <div className="mb-10 flex items-center gap-4" aria-hidden="true">
+              <span className="h-px flex-1 bg-black/10" />
+              <span style={{ color: festival.accentColor }} className="text-xl">*</span>
+              <span className="h-px flex-1 bg-black/10" />
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+              {festival.galleryImages.map((img, i) => (
                 <motion.div
+                  key={img}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.6, ease }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.6, delay: i * 0.08, ease }}
+                  className="relative aspect-[4/3] overflow-hidden"
                 >
-                  <ul className="space-y-3">
-                    {festival.features.slice(4).map((feature) => (
-                      <li key={feature} className="flex items-start gap-3">
-                        <span
-                          className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full"
-                          style={{ backgroundColor: festival.accentColor }}
-                        />
-                        <span className="text-editorial text-base text-charcoal/70 sm:text-lg">
-                          {feature}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
+                  <Image
+                    src={img}
+                    alt={`${festival.name} gallery`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 50vw, 33vw"
+                  />
                 </motion.div>
-              )}
+              ))}
             </div>
-
-            {/* Right column — tall image */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.8, delay: 0.15, ease }}
-              className="editorial-image relative aspect-[3/4] overflow-hidden lg:col-span-7"
-            >
-              <Image
-                src={festival.galleryImages[2]}
-                alt={`${festival.name} gallery`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 58vw"
-              />
-              <div
-                className="absolute inset-0 opacity-0 mix-blend-multiply transition-opacity duration-700 hover:opacity-15"
-                style={{ backgroundColor: festival.accentColor }}
-              />
-            </motion.div>
-          </div>
-        )}
-
-        {/* Third row — additional gallery images in a magazine strip */}
-        {festival.galleryImages.length > 3 && (
-          <div className="mt-6 grid grid-cols-2 gap-4 lg:mt-8 lg:grid-cols-3 lg:gap-6">
-            {festival.galleryImages.slice(3).map((img, i) => (
-              <motion.div
-                key={img}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.7, delay: i * 0.1, ease }}
-                className={`editorial-image relative overflow-hidden ${
-                  i === 0 ? "aspect-[4/3]" : "aspect-[3/4] lg:aspect-[4/3]"
-                }`}
-              >
-                <Image
-                  src={img}
-                  alt={`${festival.name} gallery`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 50vw, 33vw"
-                />
-              </motion.div>
-            ))}
-          </div>
-        )}
-
-        {/* No images fallback — features only layout */}
-        {!hasImages && (
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-            <motion.blockquote
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, ease }}
-              className="relative py-8"
-            >
-              <span
-                className="absolute left-0 top-4 text-[6rem] font-thin leading-none opacity-10"
-                style={{ color: festival.accentColor }}
-                aria-hidden="true"
-              >
-                &ldquo;
-              </span>
-              <p className="text-editorial relative z-10 text-xl italic leading-[1.6] text-charcoal/60 sm:text-2xl">
-                {festival.description}
-              </p>
-            </motion.blockquote>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.2, ease }}
-            >
-              <span
-                className="text-display mb-8 block text-lg sm:text-xl"
-                style={{ color: festival.accentColor }}
-              >
-                Highlights
-              </span>
-              <ul className="space-y-4">
-                {festival.features.map((feature, i) => (
-                  <motion.li
-                    key={feature}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.5, delay: 0.3 + i * 0.08, ease }}
-                    className="flex items-start gap-3"
-                  >
-                    <span
-                      className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: festival.accentColor }}
-                    />
-                    <span className="text-editorial text-base text-charcoal/70 sm:text-lg">
-                      {feature}
-                    </span>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
           </div>
         )}
       </div>
@@ -544,12 +331,10 @@ function CTASection({ festival }: { festival: Festival }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-  // Get other festivals for navigation
   const otherFestivals = festivals.filter((f) => f.slug !== festival.slug);
 
   return (
-    <section ref={ref} className="relative bg-charcoal overflow-hidden">
-      {/* Decorative brace background */}
+    <section ref={ref} className="relative bg-black overflow-hidden">
       <span
         className="pointer-events-none absolute right-8 top-8 hidden select-none text-[20rem] font-thin leading-none opacity-[0.03] lg:block"
         style={{ color: festival.accentColor }}
@@ -558,8 +343,7 @@ function CTASection({ festival }: { festival: Festival }) {
         &#125;
       </span>
 
-      <div className="relative z-10 mx-auto max-w-[1500px] px-6 py-24 sm:px-12 lg:px-20 lg:py-40">
-        {/* Main CTA */}
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:px-12 lg:px-20 lg:py-40">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -567,7 +351,7 @@ function CTASection({ festival }: { festival: Festival }) {
           className="mb-24 lg:mb-32"
         >
           <span className="text-mono mb-8 block text-white/30">
-            ✱ Get involved
+            * Get involved
           </span>
 
           {festival.externalLink ? (
@@ -632,21 +416,21 @@ function CTASection({ festival }: { festival: Festival }) {
           )}
         </motion.div>
 
-        {/* Asterisk separator */}
+        {/* Separator */}
         <div className="mb-16 flex items-center gap-4" aria-hidden="true">
-          <span style={{ color: festival.accentColor }} className="text-xl">✱</span>
+          <span style={{ color: festival.accentColor }} className="text-xl">*</span>
           <span className="h-px flex-1 bg-white/10" />
-          <span style={{ color: festival.accentColor }} className="text-xl">✱</span>
+          <span style={{ color: festival.accentColor }} className="text-xl">*</span>
         </div>
 
-        {/* Other festivals navigation */}
+        {/* Other festivals */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.2, ease }}
         >
           <span className="text-mono mb-10 block text-white/30">
-            ✱ More from the collective
+            * More from the collective
           </span>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -661,7 +445,6 @@ function CTASection({ festival }: { festival: Festival }) {
                   href={`/festivals/${f.slug}`}
                   className="group relative block border border-white/10 p-6 transition-all duration-500 hover:border-white/25 sm:p-8"
                 >
-                  {/* Color accent line */}
                   <div
                     className="absolute left-0 top-0 h-full w-0 transition-all duration-500 group-hover:w-1"
                     style={{ backgroundColor: f.accentColor }}
@@ -679,14 +462,11 @@ function CTASection({ festival }: { festival: Festival }) {
                         {f.tagline}
                       </p>
                     </div>
-                    <span
-                      className="text-mono text-white/20"
-                    >
+                    <span className="text-mono text-white/20">
                       {f.established}
                     </span>
                   </div>
 
-                  {/* Arrow */}
                   <div className="mt-6 flex items-center gap-2 text-white/30 transition-all duration-300 group-hover:gap-4 group-hover:text-white/70">
                     <span className="text-mono text-[0.65rem]">Explore</span>
                     <svg
@@ -710,7 +490,6 @@ function CTASection({ festival }: { festival: Festival }) {
           </div>
         </motion.div>
 
-        {/* Back to all festivals */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
@@ -747,8 +526,7 @@ export default function FestivalPageContent({ festival }: { festival: Festival }
   return (
     <>
       <HeroSection festival={festival} />
-      <IntroductionSection festival={festival} />
-      <EditorialSection festival={festival} />
+      <EditorialArticle festival={festival} />
       <CTASection festival={festival} />
     </>
   );
