@@ -34,7 +34,7 @@ export default function ProgrammesGrid() {
           </motion.p>
         </div>
 
-        {/* Featured hub card */}
+        {/* Featured hub card — large */}
         {featured && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -44,13 +44,13 @@ export default function ProgrammesGrid() {
               delay: 0.15,
               ease: [0.25, 0.46, 0.45, 0.94] as const,
             }}
-            className="mb-6"
+            className="mb-8"
           >
             <Link
               href={`/programmes/${featured.slug}`}
               className="group block relative"
             >
-              <div className="relative aspect-[21/9] overflow-hidden">
+              <div className="relative aspect-[3/4] sm:aspect-[21/9] overflow-hidden">
                 <Image
                   src={featured.heroImage}
                   alt={featured.name}
@@ -59,17 +59,20 @@ export default function ProgrammesGrid() {
                   sizes="100vw"
                 />
                 <div className="absolute inset-0 bg-black/40 transition-opacity duration-300 group-hover:bg-black/50" />
-                <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10">
-                  <span className="text-[11px] uppercase tracking-[0.15em] text-white/60 mb-2">
+                <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 lg:p-14">
+                  <span className="text-[11px] uppercase tracking-[0.15em] text-white/60 mb-3">
                     {featured.label}
                   </span>
                   <span
-                    className="block text-white text-2xl sm:text-3xl lg:text-4xl transition-colors duration-200 group-hover:text-blue"
-                    style={{ fontWeight: 700 }}
+                    className="block text-white transition-colors duration-200 group-hover:text-blue"
+                    style={{
+                      fontWeight: 700,
+                      fontSize: "clamp(1.8rem, 4vw, 3.5rem)",
+                    }}
                   >
                     {featured.name}
                   </span>
-                  <span className="block mt-2 text-[11px] uppercase tracking-[0.15em] text-white/60 max-w-xl">
+                  <span className="block mt-3 text-sm sm:text-base text-white/60 max-w-xl leading-relaxed">
                     {featured.tagline}
                   </span>
                 </div>
@@ -78,8 +81,8 @@ export default function ProgrammesGrid() {
           </motion.div>
         )}
 
-        {/* Programme cards grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* Programme cards grid — compact */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {rest.map((programme, i) => (
             <motion.div
               key={programme.slug}
@@ -87,7 +90,7 @@ export default function ProgrammesGrid() {
               animate={isInView ? { opacity: 1 } : {}}
               transition={{
                 duration: 0.6,
-                delay: 0.25 + i * 0.1,
+                delay: 0.25 + i * 0.08,
                 ease: [0.25, 0.46, 0.45, 0.94] as const,
               }}
             >
@@ -95,24 +98,24 @@ export default function ProgrammesGrid() {
                 href={`/programmes/${programme.slug}`}
                 className="group block relative"
               >
-                <div className="relative aspect-[4/3] overflow-hidden">
+                <div className="relative aspect-[3/4] overflow-hidden">
                   <Image
                     src={programme.heroImage}
                     alt={programme.name}
                     fill
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                    sizes="(max-width: 640px) 100vw, 50vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                   />
                 </div>
-                <div className="pt-4">
+                <div className="pt-3">
                   <span
-                    className="block text-black group-hover:text-blue transition-colors duration-200"
-                    style={{ fontWeight: 700, fontSize: "1rem" }}
+                    className="block text-black group-hover:text-blue transition-colors duration-200 text-sm"
+                    style={{ fontWeight: 600 }}
                   >
                     {programme.name}
                   </span>
-                  <span className="block mt-1 text-[11px] uppercase tracking-[0.15em] text-black/40">
-                    {programme.label} — {programme.tagline}
+                  <span className="block mt-0.5 text-[10px] uppercase tracking-[0.12em] text-black/35">
+                    {programme.label}
                   </span>
                 </div>
               </Link>
