@@ -43,8 +43,11 @@ function getLuminance(r: number, g: number, b: number): number {
 
 function parseColor(color: string): [number, number, number] | null {
   if (color.startsWith("rgb")) {
-    const m = color.match(/(\d+)/g);
-    if (m && m.length >= 3) return [+m[0], +m[1], +m[2]];
+    const m = color.match(/[\d.]+/g);
+    if (!m || m.length < 3) return null;
+    // Skip fully transparent backgrounds — they'd read as black
+    if (m.length >= 4 && parseFloat(m[3]) === 0) return null;
+    return [+m[0], +m[1], +m[2]];
   }
   return null;
 }
@@ -87,8 +90,8 @@ export default function Navbar() {
     if (mobileOpen) return;
 
     function detectBackground() {
-      if (typeof document === "undefined") return;
-      const navHeight = navRef.current?.offsetHeight ?? 56;
+      if (typeof document === "undefined" || !navRef.current) return;
+      const navHeight = navRef.current.offsetHeight ?? 56;
       const sampleY = navHeight / 2;
       const samplePoints = [
         window.innerWidth * 0.25,
@@ -99,13 +102,13 @@ export default function Navbar() {
       let totalLuminance = 0;
       let samples = 0;
 
-      for (const x of samplePoints) {
-        // Temporarily hide the nav to sample what's behind it
-        if (navRef.current) navRef.current.style.pointerEvents = "none";
-        const el = document.elementFromPoint(x, sampleY);
-        if (navRef.current) navRef.current.style.pointerEvents = "";
+      // Hide nav so elementFromPoint can see through it
+      navRef.current.style.visibility = "hidden";
 
-        if (el && el !== navRef.current) {
+      for (const x of samplePoints) {
+        const el = document.elementFromPoint(x, sampleY);
+
+        if (el) {
           const bg = window.getComputedStyle(el).backgroundColor;
           const rgb = parseColor(bg);
           if (rgb) {
@@ -115,16 +118,22 @@ export default function Navbar() {
         }
       }
 
+      navRef.current.style.visibility = "";
+
       if (samples > 0) {
-        // If background is dark (luminance < 0.35), use light text
         setIsDark(totalLuminance / samples < 0.35);
       }
     }
 
+    // Run after a short delay on mount to let page render
+    const initialTimer = setTimeout(detectBackground, 100);
     detectBackground();
     const onScroll = () => detectBackground();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      clearTimeout(initialTimer);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [mobileOpen]);
 
   useEffect(() => {

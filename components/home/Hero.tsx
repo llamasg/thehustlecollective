@@ -166,31 +166,33 @@ export default function Hero() {
 
       {/* Title + bottom bar */}
       <div
-        className="relative z-10 flex-1 flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-8 select-none pointer-events-none"
+        className="relative z-10 flex-1 flex flex-col px-6 sm:px-10 lg:px-16 py-8 select-none pointer-events-none"
         style={showTrail ? { mixBlendMode: "difference" } : undefined}
       >
-        {/* Center — the big type */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <h1
-            className="leading-[0.88] tracking-[0.04em] text-center text-white"
-            style={{
-              fontFamily: "var(--font-formula)",
-              fontSize: "clamp(2.4rem, 11vw, 14rem)",
-              fontWeight: 700,
-            }}
+        {/* Center — the big type, true vertical center */}
+        <div className="flex-1 flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
           >
-            The Hustle
-            <br />
-            Collective
-          </h1>
-        </motion.div>
+            <h1
+              className="leading-[0.88] tracking-[0.04em] text-center text-white"
+              style={{
+                fontFamily: "var(--font-formula)",
+                fontSize: "clamp(2.4rem, 11vw, 14rem)",
+                fontWeight: 700,
+              }}
+            >
+              The Hustle
+              <br />
+              Collective
+            </h1>
+          </motion.div>
+        </div>
 
         {/* Bottom bar */}
-        <div className="mt-auto grid grid-cols-3 gap-x-6">
+        <div className="grid grid-cols-3 gap-x-6">
           <motion.div
             className="self-end"
             initial={{ opacity: 0 }}
