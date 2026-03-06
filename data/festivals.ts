@@ -176,8 +176,11 @@ export const festivals: Festival[] = [
       { value: "FREE", label: "Entry" },
       { value: "BFI", label: "Supported by" },
     ],
-    heroImage: "/images/554913406_18396846703184896_4025014112839678247_n.jpg",
-    galleryImages: [],
+    heroImage: "/images/b23f96b3-dadd-4e4d-9fda-71441f8e0b49.png",
+    galleryImages: [
+      "/images/d0e19794-c994-453e-b8ba-3ffbedcfd844_rw_1920.jpg",
+      "/images/43869f59-ab48-4bde-ba89-379b24d17ea6_rw_1920.jpg",
+    ],
   },
 ];
 

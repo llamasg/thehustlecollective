@@ -46,7 +46,7 @@ export default function EditorialGallery() {
           The Gallery
         </motion.p>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-px bg-black/10">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {galleryImages.map((img, i) => (
             <motion.div
               key={img.src}
@@ -57,7 +57,7 @@ export default function EditorialGallery() {
                 duration: 0.6,
                 ease: [0.25, 0.46, 0.45, 0.94] as const,
               }}
-              className="relative aspect-[4/3] overflow-hidden bg-grey"
+              className="relative aspect-[3/2] overflow-hidden bg-grey"
             >
               <Image
                 src={img.src}
