@@ -23,6 +23,15 @@
   font-display: swap;
 }
 
+/* ── PP Formula ── */
+@font-face {
+  font-family: "PP Formula";
+  src: url("/fonts/PPFormula-ExtendedBold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme inline {
   --color-grey: #e9eae9;
   --color-black: #000000;
@@ -30,6 +39,7 @@
   --color-white: #ffffff;
 
   --font-helvetica: "Helvetica Now", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-formula: "PP Formula", "Helvetica Now", sans-serif;
 }
 
 /* ── Base ── */

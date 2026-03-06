@@ -36,6 +36,7 @@ const CARD_H = 320;
 export default function Hero() {
   const [isMobile, setIsMobile] = useState(false);
   const [cards, setCards] = useState<TrailCard[]>([]);
+  const [slideIndex, setSlideIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const imgIdx = useRef(0);
   const cardId = useRef(0);
@@ -49,6 +50,15 @@ export default function Hero() {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  // Mobile slideshow — slow smooth crossfade
+  useEffect(() => {
+    if (!isMobile) return;
+    const timer = setInterval(() => {
+      setSlideIndex((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [isMobile]);
 
   useEffect(() => {
     if (cards.length === 0) return;
@@ -95,7 +105,7 @@ export default function Hero() {
 
   return (
     <section className="relative h-screen flex flex-col overflow-hidden bg-grey">
-      {/* Trail layer */}
+      {/* Trail layer — desktop */}
       {showTrail && (
         <div
           ref={containerRef}
@@ -134,83 +144,96 @@ export default function Hero() {
         </div>
       )}
 
-      {/* Mobile fallback */}
+      {/* Mobile slideshow — smooth crossfade with black overlay */}
       {!showTrail && (
-        <div className="absolute inset-0 z-0 grid grid-cols-3 gap-px opacity-20">
-          {heroImages.slice(0, 9).map((src, i) => (
-            <div key={i} className="aspect-[3/4] overflow-hidden">
-              <img
-                src={src}
-                alt=""
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-          ))}
+        <div className="absolute inset-0 z-0">
+          <AnimatePresence>
+            <motion.img
+              key={slideIndex}
+              src={heroImages[slideIndex]}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+            />
+          </AnimatePresence>
+          {/* Black overlay for contrast with white text */}
+          <div className="absolute inset-0 bg-black/50" />
         </div>
       )}
 
-      {/* Type specimen grid */}
-      <div className="relative z-10 flex-1 grid grid-cols-3 gap-x-6 px-6 sm:px-10 lg:px-16 py-8 select-none pointer-events-none">
+      {/* Title + bottom bar */}
+      <div
+        className="relative z-10 flex-1 flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-8 select-none pointer-events-none"
+        style={showTrail ? { mixBlendMode: "difference" } : undefined}
+      >
         {/* Center — the big type */}
         <motion.div
-          className="col-span-3 self-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <h1
-            className="uppercase text-black leading-[0.88] tracking-[0.04em] text-center"
+            className="leading-[0.88] tracking-[0.04em] text-center text-white"
             style={{
-              fontSize: "clamp(3rem, 13vw, 14rem)",
-              fontWeight: 600,
+              fontFamily: "var(--font-formula)",
+              fontSize: "clamp(2.4rem, 11vw, 14rem)",
+              fontWeight: 700,
             }}
           >
-            The
-            <br />
-            Hustle
+            The Hustle
             <br />
             Collective
           </h1>
         </motion.div>
 
-        {/* Bottom left */}
-        <motion.div
-          className="self-end"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-        >
-          <p className="text-[11px] sm:text-xs uppercase tracking-[0.2em] text-black/60">
-            Est. 2006
-          </p>
-        </motion.div>
-
-        {/* Bottom center */}
-        <motion.div
-          className="self-end text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-        >
-          <p className="text-[11px] sm:text-xs uppercase tracking-[0.2em] text-black/60">
-            Art + Music + Culture
-          </p>
-        </motion.div>
-
-        {/* Bottom right */}
-        <motion.div
-          className="self-end text-right"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-        >
-          {showTrail && (
-            <p className="text-[10px] uppercase tracking-[0.2em] text-black/30">
-              Move your cursor
+        {/* Bottom bar */}
+        <div className="mt-auto grid grid-cols-3 gap-x-6">
+          <motion.div
+            className="self-end"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <p
+              className={`text-[11px] sm:text-xs uppercase tracking-[0.2em] ${
+                showTrail ? "text-white" : "text-white/70"
+              }`}
+            >
+              Est. 2006
             </p>
-          )}
-        </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="self-end text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+          >
+            <p
+              className={`text-[11px] sm:text-xs uppercase tracking-[0.2em] ${
+                showTrail ? "text-white" : "text-white/70"
+              }`}
+            >
+              Art + Music + Culture
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="self-end text-right"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
+            {showTrail && (
+              <p className="text-[10px] uppercase tracking-[0.2em] text-white">
+                Move your cursor
+              </p>
+            )}
+          </motion.div>
+        </div>
       </div>
     </section>
   );
