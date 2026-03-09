@@ -14,7 +14,7 @@ import {apiVersion, dataset, projectId} from './sanity/env'
 import {schema} from './sanity/schemaTypes'
 import {structure} from './sanity/structure'
 
-const PREVIEW_URL = process.env.SANITY_STUDIO_PREVIEW_URL || 'https://thehustlecollective-git-main-llamasgs-projects.vercel.app'
+const PREVIEW_URL = process.env.SANITY_STUDIO_PREVIEW_URL || 'https://thehustlecollective.com'
 
 export default defineConfig({
   basePath: '/admin',
