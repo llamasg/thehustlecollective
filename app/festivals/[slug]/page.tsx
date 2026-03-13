@@ -1,14 +1,48 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { draftMode } from "next/headers";
 import { getFestivalBySlug, festivals } from "@/data/festivals";
+import {
+  getFestivalBySlugFromSanity,
+  getAllFestivalSlugs,
+  sanityImageUrl,
+} from "@/lib/sanity";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FestivalPageContent from "@/components/festivals/FestivalPageContent";
+import { type Festival } from "@/data/festivals";
 
-export function generateStaticParams() {
-  return festivals.map((festival) => ({
-    slug: festival.slug,
-  }));
+async function resolveFestival(slug: string, isDraft = false): Promise<Festival | null> {
+  // Try Sanity first
+  const sanity = await getFestivalBySlugFromSanity(slug, isDraft);
+  if (sanity) {
+    return {
+      slug: sanity.slug,
+      name: sanity.name,
+      tagline: sanity.tagline || "",
+      established: sanity.established || 2006,
+      accentColor: sanity.accentColor?.hex || "#174af4",
+      accentColorLight: sanity.accentColorLight?.hex || sanity.accentColor?.hex || "#174af4",
+      intro: sanity.intro || "",
+      sections: sanity.sections || [],
+      pullQuote: sanity.pullQuote,
+      stats: sanity.stats || [],
+      externalLink: sanity.externalLink,
+      heroImage: sanity.heroImage ? sanityImageUrl(sanity.heroImage) : "/images/placeholder-festival.jpg",
+      galleryImages: (sanity.galleryImages || []).map((img) => sanityImageUrl(img)),
+    };
+  }
+
+  // Fall back to static data
+  return getFestivalBySlug(slug) || null;
+}
+
+export async function generateStaticParams() {
+  // Merge Sanity slugs with static slugs
+  const sanitySlugs = await getAllFestivalSlugs();
+  const staticSlugs = festivals.map((f) => f.slug);
+  const allSlugs = [...new Set([...sanitySlugs, ...staticSlugs])];
+  return allSlugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -17,7 +51,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const festival = getFestivalBySlug(slug);
+  const festival = await resolveFestival(slug);
 
   if (!festival) {
     return { title: "Festival Not Found" };
@@ -48,7 +82,8 @@ export default async function FestivalPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const festival = getFestivalBySlug(slug);
+  const { isEnabled: isDraft } = await draftMode();
+  const festival = await resolveFestival(slug, isDraft);
 
   if (!festival) {
     notFound();

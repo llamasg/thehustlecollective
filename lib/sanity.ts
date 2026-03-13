@@ -210,3 +210,85 @@ export async function getAllProgrammeSlugs(): Promise<string[]> {
   if (!client) return []
   return client.fetch<string[]>(programmeSlugsQuery, {}, { next: { tags: ['programme'] } })
 }
+
+// ── Festival Queries ──
+
+export const allFestivalsQuery = `
+  *[_type == "festival"] | order(order asc) {
+    _id,
+    name,
+    "slug": slug.current,
+    tagline,
+    established,
+    accentColor,
+    accentColorLight,
+    heroImage,
+    intro,
+    sections[] { title, body },
+    pullQuote,
+    stats[] { value, label },
+    externalLink,
+    galleryImages[] { asset->, alt },
+    order
+  }
+`
+
+export const festivalBySlugQuery = `
+  *[_type == "festival" && slug.current == $slug][0] {
+    _id,
+    name,
+    "slug": slug.current,
+    tagline,
+    established,
+    accentColor,
+    accentColorLight,
+    heroImage,
+    intro,
+    sections[] { title, body },
+    pullQuote,
+    stats[] { value, label },
+    externalLink,
+    galleryImages[] { asset->, alt },
+    order
+  }
+`
+
+export const festivalSlugsQuery = `
+  *[_type == "festival" && defined(slug.current)].slug.current
+`
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface SanityFestival {
+  _id: string
+  name: string
+  slug: string
+  tagline: string
+  established: number
+  accentColor?: { hex: string }
+  accentColorLight?: { hex: string }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  heroImage?: any
+  intro?: string
+  sections?: { title: string; body: string }[]
+  pullQuote?: string
+  stats?: { value: string; label: string }[]
+  externalLink?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  galleryImages?: any[]
+  order?: number
+}
+
+export async function getAllFestivals(isDraft = false): Promise<SanityFestival[]> {
+  if (!client) return []
+  return client.fetch<SanityFestival[]>(allFestivalsQuery, {}, { ...fetchOptions(isDraft), next: { tags: ['festival'], ...(isDraft ? { revalidate: 0 } : {}) } })
+}
+
+export async function getFestivalBySlugFromSanity(slug: string, isDraft = false): Promise<SanityFestival | null> {
+  if (!client) return null
+  return client.fetch<SanityFestival | null>(festivalBySlugQuery, { slug }, { ...fetchOptions(isDraft), next: { tags: ['festival'], ...(isDraft ? { revalidate: 0 } : {}) } })
+}
+
+export async function getAllFestivalSlugs(): Promise<string[]> {
+  if (!client) return []
+  return client.fetch<string[]>(festivalSlugsQuery, {}, { next: { tags: ['festival'] } })
+}
