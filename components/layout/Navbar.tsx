@@ -16,7 +16,7 @@ const programmeItems = [
   { name: "Promoter Mentorship", slug: "promoter-mentorship", tagline: "Supporting emerging promoters" },
   { name: "Industry Day 2023", slug: "industry-day-2023", tagline: "Panels, talks & networking" },
   { name: "Industry Day 2024", slug: "industry-day-2024", tagline: "Panels, talks & networking" },
-  { name: "Industry Weekend 2025", slug: "industry-weekend-2025", tagline: "Two days of industry insight" },
+  { name: "Industry Weekend 2026", slug: "industry-weekend-2026", tagline: "Two days of industry insight" },
   { name: "Artist Development 2026", slug: "artist-development-2026", tagline: "Nurturing creative talent" },
 ];
 

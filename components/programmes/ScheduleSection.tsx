@@ -143,7 +143,7 @@ export default function ScheduleSection({
             Lineup
           </h2>
           <p className="text-editorial mt-3 text-white/40 text-base sm:text-lg">
-            Fishergate Point · 21st &amp; 22nd March
+            Fishergate Point · 21st &amp; 22nd March 2026
           </p>
         </motion.div>
 
