@@ -507,15 +507,17 @@ function CTASection({ programme }: { programme: Programme }) {
 export default function ProgrammePageContent({
   programme,
   events = [],
+  eventbriteUrl,
 }: {
   programme: Programme;
   events?: SanityEvent[];
+  eventbriteUrl?: string;
 }) {
   return (
     <>
       <HeroSection programme={programme} />
       <HeroImage programme={programme} />
-      {events.length > 0 && <ScheduleSection events={events} />}
+      {events.length > 0 && <ScheduleSection events={events} eventbriteUrl={eventbriteUrl} />}
       {programme.hasContent ? (
         <EditorialContent programme={programme} />
       ) : (

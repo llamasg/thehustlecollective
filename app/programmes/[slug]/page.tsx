@@ -5,7 +5,6 @@ import { getProgrammeBySlug, programmes } from "@/data/programmes";
 import {
   getProgrammeBySlugFromSanity,
   getAllProgrammeSlugs,
-  getEventsByProgrammeSlug,
   sanityImageUrl,
 } from "@/lib/sanity";
 import type { SanityEvent } from "@/lib/sanity";
@@ -14,29 +13,41 @@ import Footer from "@/components/layout/Footer";
 import ProgrammePageContent from "@/components/programmes/ProgrammePageContent";
 import { type Programme } from "@/data/programmes";
 
-async function resolveProgramme(slug: string, isDraft = false): Promise<Programme | null> {
+interface ResolvedProgramme {
+  programme: Programme;
+  events: SanityEvent[];
+  eventbriteUrl?: string;
+}
+
+async function resolveProgramme(slug: string, isDraft = false): Promise<ResolvedProgramme | null> {
   // Try Sanity first
   const sanity = await getProgrammeBySlugFromSanity(slug, isDraft);
   if (sanity) {
     return {
-      slug: sanity.slug,
-      name: sanity.name,
-      tagline: sanity.tagline || "",
-      descriptor: sanity.descriptor || "",
-      label: sanity.label || "",
-      heroImage: sanity.heroImage ? sanityImageUrl(sanity.heroImage) : "/images/placeholder-programme.jpg",
-      galleryImages: (sanity.galleryImages || []).map((img) => sanityImageUrl(img)),
-      hasContent: sanity.hasContent ?? false,
-      featured: sanity.featured ?? false,
-      intro: sanity.intro,
-      sections: sanity.sections,
-      pullQuote: sanity.pullQuote,
-      speakers: sanity.speakers,
+      programme: {
+        slug: sanity.slug,
+        name: sanity.name,
+        tagline: sanity.tagline || "",
+        descriptor: sanity.descriptor || "",
+        label: sanity.label || "",
+        heroImage: sanity.heroImage ? sanityImageUrl(sanity.heroImage) : "/images/placeholder-programme.jpg",
+        galleryImages: (sanity.galleryImages || []).map((img) => sanityImageUrl(img)),
+        hasContent: sanity.hasContent ?? false,
+        featured: sanity.featured ?? false,
+        intro: sanity.intro,
+        sections: sanity.sections,
+        pullQuote: sanity.pullQuote,
+        speakers: sanity.speakers,
+      },
+      events: sanity.events || [],
+      eventbriteUrl: sanity.eventbriteUrl,
     };
   }
 
   // Fall back to static data
-  return getProgrammeBySlug(slug) || null;
+  const staticProgramme = getProgrammeBySlug(slug);
+  if (!staticProgramme) return null;
+  return { programme: staticProgramme, events: [], eventbriteUrl: undefined };
 }
 
 export async function generateStaticParams() {
@@ -53,12 +64,13 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const programme = await resolveProgramme(slug);
+  const resolved = await resolveProgramme(slug);
 
-  if (!programme) {
+  if (!resolved) {
     return { title: "Programme Not Found" };
   }
 
+  const { programme } = resolved;
   return {
     title: `${programme.name} — The Hustle Collective`,
     description: programme.intro || programme.descriptor,
@@ -84,19 +96,19 @@ export default async function ProgrammePage({
 }) {
   const { slug } = await params;
   const { isEnabled: isDraft } = await draftMode();
-  const programme = await resolveProgramme(slug, isDraft);
+  const resolved = await resolveProgramme(slug, isDraft);
 
-  if (!programme) {
+  if (!resolved) {
     notFound();
   }
 
-  const events = await getEventsByProgrammeSlug(slug, isDraft);
+  const { programme, events, eventbriteUrl } = resolved;
 
   return (
     <>
       <Navbar />
       <main>
-        <ProgrammePageContent programme={programme} events={events} />
+        <ProgrammePageContent programme={programme} events={events} eventbriteUrl={eventbriteUrl} />
       </main>
       <Footer />
     </>

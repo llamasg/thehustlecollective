@@ -166,6 +166,8 @@ export const programmeBySlugQuery = `
     sections[] { title, body },
     pullQuote,
     speakers[] { name, role },
+    events[] { day, time, title, type, host, panelists[] { name, role }, bookingRequired, eventbriteUrl, _key },
+    eventbriteUrl,
     galleryImages[] { asset->, alt },
     order
   }
@@ -174,6 +176,20 @@ export const programmeBySlugQuery = `
 export const programmeSlugsQuery = `
   *[_type == "programme" && defined(slug.current)].slug.current
 `
+
+export interface SanityEvent {
+  _id?: string
+  _key?: string
+  day: string
+  time: string
+  title: string
+  type: 'Workshop' | 'Panel' | 'Discussion' | '1-1 Sessions'
+  host?: string
+  panelists?: { name: string; role: string }[]
+  bookingRequired?: boolean
+  eventbriteUrl?: string
+  order?: number
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface SanityProgramme {
@@ -191,6 +207,8 @@ export interface SanityProgramme {
   sections?: { title: string; body: string }[]
   pullQuote?: string
   speakers?: { name: string; role: string }[]
+  events?: SanityEvent[]
+  eventbriteUrl?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   galleryImages?: any[]
   order?: number
@@ -293,37 +311,3 @@ export async function getAllFestivalSlugs(): Promise<string[]> {
   return client.fetch<string[]>(festivalSlugsQuery, {}, { next: { tags: ['festival'] } })
 }
 
-// ── Event Queries ──
-
-export const eventsByProgrammeSlugQuery = `
-  *[_type == "event" && programme->slug.current == $slug] | order(order asc) {
-    _id,
-    day,
-    time,
-    title,
-    type,
-    host,
-    panelists[] { name, role },
-    bookingRequired,
-    eventbriteUrl,
-    order
-  }
-`
-
-export interface SanityEvent {
-  _id: string
-  day: string
-  time: string
-  title: string
-  type: 'Workshop' | 'Panel' | 'Discussion' | '1-1 Sessions'
-  host?: string
-  panelists?: { name: string; role: string }[]
-  bookingRequired?: boolean
-  eventbriteUrl?: string
-  order?: number
-}
-
-export async function getEventsByProgrammeSlug(slug: string, isDraft = false): Promise<SanityEvent[]> {
-  if (!client) return []
-  return client.fetch<SanityEvent[]>(eventsByProgrammeSlugQuery, { slug }, { ...fetchOptions(isDraft), useCdn: false, next: { tags: ['event'], revalidate: isDraft ? 0 : 60 } })
-}

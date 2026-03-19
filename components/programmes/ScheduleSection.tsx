@@ -187,7 +187,7 @@ export default function ScheduleSection({
                 {/* Event cards */}
                 <div className="space-y-3">
                   {slot.events.map((event, i) => (
-                    <EventCard key={event._id} event={event} index={i} />
+                    <EventCard key={event._key || event._id || i} event={event} index={i} />
                   ))}
                 </div>
               </div>
