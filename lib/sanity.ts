@@ -325,5 +325,5 @@ export interface SanityEvent {
 
 export async function getEventsByProgrammeSlug(slug: string, isDraft = false): Promise<SanityEvent[]> {
   if (!client) return []
-  return client.fetch<SanityEvent[]>(eventsByProgrammeSlugQuery, { slug }, { ...fetchOptions(isDraft), next: { tags: ['event'], ...(isDraft ? { revalidate: 0 } : {}) } })
+  return client.fetch<SanityEvent[]>(eventsByProgrammeSlugQuery, { slug }, { ...fetchOptions(isDraft), useCdn: false, next: { tags: ['event'], revalidate: isDraft ? 0 : 60 } })
 }
