@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { type Programme, programmes } from "@/data/programmes";
 import ImagePlaceholder from "@/components/shared/ImagePlaceholder";
+import ScheduleSection from "@/components/programmes/ScheduleSection";
+import type { SanityEvent } from "@/lib/sanity";
 
 // ── Animation config ──
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
@@ -504,13 +506,16 @@ function CTASection({ programme }: { programme: Programme }) {
 // ── Main Page Content Component ──
 export default function ProgrammePageContent({
   programme,
+  events = [],
 }: {
   programme: Programme;
+  events?: SanityEvent[];
 }) {
   return (
     <>
       <HeroSection programme={programme} />
       <HeroImage programme={programme} />
+      {events.length > 0 && <ScheduleSection events={events} />}
       {programme.hasContent ? (
         <EditorialContent programme={programme} />
       ) : (

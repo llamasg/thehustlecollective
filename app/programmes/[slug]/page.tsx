@@ -5,8 +5,10 @@ import { getProgrammeBySlug, programmes } from "@/data/programmes";
 import {
   getProgrammeBySlugFromSanity,
   getAllProgrammeSlugs,
+  getEventsByProgrammeSlug,
   sanityImageUrl,
 } from "@/lib/sanity";
+import type { SanityEvent } from "@/lib/sanity";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ProgrammePageContent from "@/components/programmes/ProgrammePageContent";
@@ -88,11 +90,13 @@ export default async function ProgrammePage({
     notFound();
   }
 
+  const events = await getEventsByProgrammeSlug(slug, isDraft);
+
   return (
     <>
       <Navbar />
       <main>
-        <ProgrammePageContent programme={programme} />
+        <ProgrammePageContent programme={programme} events={events} />
       </main>
       <Footer />
     </>

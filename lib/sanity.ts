@@ -292,3 +292,38 @@ export async function getAllFestivalSlugs(): Promise<string[]> {
   if (!client) return []
   return client.fetch<string[]>(festivalSlugsQuery, {}, { next: { tags: ['festival'] } })
 }
+
+// ── Event Queries ──
+
+export const eventsByProgrammeSlugQuery = `
+  *[_type == "event" && programme->slug.current == $slug] | order(order asc) {
+    _id,
+    day,
+    time,
+    title,
+    type,
+    host,
+    panelists[] { name, role },
+    bookingRequired,
+    eventbriteUrl,
+    order
+  }
+`
+
+export interface SanityEvent {
+  _id: string
+  day: string
+  time: string
+  title: string
+  type: 'Workshop' | 'Panel' | 'Discussion' | '1-1 Sessions'
+  host?: string
+  panelists?: { name: string; role: string }[]
+  bookingRequired?: boolean
+  eventbriteUrl?: string
+  order?: number
+}
+
+export async function getEventsByProgrammeSlug(slug: string, isDraft = false): Promise<SanityEvent[]> {
+  if (!client) return []
+  return client.fetch<SanityEvent[]>(eventsByProgrammeSlugQuery, { slug }, { ...fetchOptions(isDraft), next: { tags: ['event'], ...(isDraft ? { revalidate: 0 } : {}) } })
+}
