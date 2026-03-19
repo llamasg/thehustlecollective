@@ -84,7 +84,7 @@ function EventCard({ event, index }: { event: SanityEvent; index: number }) {
         </ul>
       )}
 
-      {/* Eventbrite link */}
+      {/* Booking link */}
       {event.eventbriteUrl && (
         <a
           href={event.eventbriteUrl}
@@ -92,7 +92,7 @@ function EventCard({ event, index }: { event: SanityEvent; index: number }) {
           rel="noopener noreferrer"
           className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-blue transition-colors hover:text-black"
         >
-          Book on Eventbrite
+          {event.type === "1-1 Sessions" ? "Book a 20-min slot" : "Book on Eventbrite"}
           <svg
             width="14"
             height="14"
