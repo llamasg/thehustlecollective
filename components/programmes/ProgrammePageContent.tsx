@@ -13,7 +13,7 @@ import type { SanityEvent } from "@/lib/sanity";
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
 
 // ── Hero Section ──
-function HeroSection({ programme }: { programme: Programme }) {
+function HeroSection({ programme, hasEvents = false }: { programme: Programme; hasEvents?: boolean }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
@@ -97,6 +97,35 @@ function HeroSection({ programme }: { programme: Programme }) {
         >
           {programme.tagline}
         </motion.p>
+
+        {hasEvents && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.5, ease }}
+          >
+            <a
+              href="#lineup"
+              className="group mt-10 inline-flex items-center gap-3 border-2 border-blue px-8 py-4 text-sm font-bold uppercase tracking-wide text-white transition-all duration-500 hover:gap-5 hover:bg-blue"
+            >
+              View Lineup
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="transition-transform duration-300 group-hover:translate-y-1"
+                aria-hidden="true"
+              >
+                <path d="M8 3v10M4 9l4 4 4-4" />
+              </svg>
+            </a>
+          </motion.div>
+        )}
       </div>
     </section>
   );
@@ -515,14 +544,14 @@ export default function ProgrammePageContent({
 }) {
   return (
     <>
-      <HeroSection programme={programme} />
+      <HeroSection programme={programme} hasEvents={events.length > 0} />
       <HeroImage programme={programme} />
-      {events.length > 0 && <ScheduleSection events={events} eventbriteUrl={eventbriteUrl} />}
       {programme.hasContent ? (
         <EditorialContent programme={programme} />
       ) : (
         <GalleryOnlyContent programme={programme} />
       )}
+      {events.length > 0 && <ScheduleSection events={events} eventbriteUrl={eventbriteUrl} />}
       <CTASection programme={programme} />
     </>
   );
