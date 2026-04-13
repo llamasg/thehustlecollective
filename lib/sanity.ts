@@ -311,3 +311,25 @@ export async function getAllFestivalSlugs(): Promise<string[]> {
   return client.fetch<string[]>(festivalSlugsQuery, {}, { next: { tags: ['festival'] } })
 }
 
+// ── Nav item queries (lightweight, for Navbar) ──
+
+export type NavItem = { name: string; slug: string; tagline: string }
+
+export async function getNavFestivals(): Promise<NavItem[]> {
+  if (!client) return []
+  return client.fetch<NavItem[]>(
+    `*[_type == "festival"] | order(order asc) { name, "slug": slug.current, tagline }`,
+    {},
+    { next: { tags: ['festival'], revalidate: 60 } }
+  )
+}
+
+export async function getNavProgrammes(): Promise<NavItem[]> {
+  if (!client) return []
+  return client.fetch<NavItem[]>(
+    `*[_type == "programme"] | order(order asc) { name, "slug": slug.current, tagline }`,
+    {},
+    { next: { tags: ['programme'], revalidate: 60 } }
+  )
+}
+

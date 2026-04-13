@@ -4,7 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { draftMode } from "next/headers";
 import { PortableText, PortableTextComponents } from "@portabletext/react";
-import Navbar from "@/components/layout/Navbar";
+import NavbarServer from "@/components/layout/NavbarServer";
 import Footer from "@/components/layout/Footer";
 import { getAllPostSlugs, getPostBySlug, type BlogPost } from "@/lib/sanity";
 import { urlFor } from "@/sanity/lib/image";
@@ -182,7 +182,7 @@ export default async function BlogPostPage({
 
   return (
     <>
-      <Navbar />
+      <NavbarServer />
       <main>
         {/* ── Hero / Header ── */}
         <section className="relative bg-black pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">

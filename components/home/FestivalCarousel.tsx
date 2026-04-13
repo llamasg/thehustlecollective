@@ -4,9 +4,15 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { festivals } from "@/data/festivals";
 
-export default function FestivalCarousel() {
+type FestivalCard = {
+  slug: string;
+  name: string;
+  tagline: string;
+  heroImage: string;
+};
+
+export default function FestivalCarousel({ festivals }: { festivals: FestivalCard[] }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
 
@@ -27,7 +33,7 @@ export default function FestivalCarousel() {
             transition={{ delay: 0.1 }}
             className="text-[11px] uppercase tracking-[0.2em] text-black/40"
           >
-            04 Projects
+            {String(festivals.length).padStart(2, "0")} Projects
           </motion.p>
         </div>
 

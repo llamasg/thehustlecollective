@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { draftMode } from "next/headers";
-import Navbar from "@/components/layout/Navbar";
+import NavbarServer from "@/components/layout/NavbarServer";
 import Footer from "@/components/layout/Footer";
 import { getAllPosts, type BlogPost } from "@/lib/sanity";
 import { urlFor } from "@/sanity/lib/image";
@@ -54,7 +54,7 @@ export default async function BlogPage() {
 
   return (
     <>
-      <Navbar />
+      <NavbarServer />
       <main>
         {/* ── Hero ── */}
         <section className="relative bg-black pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">

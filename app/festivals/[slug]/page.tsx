@@ -7,7 +7,7 @@ import {
   getAllFestivalSlugs,
   sanityImageUrl,
 } from "@/lib/sanity";
-import Navbar from "@/components/layout/Navbar";
+import NavbarServer from "@/components/layout/NavbarServer";
 import Footer from "@/components/layout/Footer";
 import FestivalPageContent from "@/components/festivals/FestivalPageContent";
 import { type Festival } from "@/data/festivals";
@@ -91,7 +91,7 @@ export default async function FestivalPage({
 
   return (
     <>
-      <Navbar />
+      <NavbarServer />
       <main>
         <FestivalPageContent festival={festival} />
       </main>

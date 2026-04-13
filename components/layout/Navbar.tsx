@@ -4,14 +4,16 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
-const festivals = [
+export type NavItem = { name: string; slug: string; tagline: string };
+
+const defaultFestivals: NavItem[] = [
   { name: "Hockley Hustle", slug: "hockley-hustle", tagline: "Nottingham's music & arts festival" },
   { name: "Young Hustlers", slug: "young-hustlers", tagline: "The next generation festival" },
   { name: "Green Hustle", slug: "green-hustle", tagline: "Sustainability meets culture" },
   { name: "Hustle Cinematic", slug: "hustle-cinematic", tagline: "Film, sound & storytelling" },
 ];
 
-const programmeItems = [
+const defaultProgrammes: NavItem[] = [
   { name: "Future Hustlers", slug: "future-hustlers", tagline: "Talent development hub" },
   { name: "Promoter Mentorship", slug: "promoter-mentorship", tagline: "Supporting emerging promoters" },
   { name: "Industry Day 2023", slug: "industry-day-2023", tagline: "Panels, talks & networking" },
@@ -76,7 +78,15 @@ function HamburgerIcon({ isOpen, dark }: { isOpen: boolean; dark: boolean }) {
   );
 }
 
-export default function Navbar() {
+export default function Navbar({
+  festivals: festivalsProp,
+  programmes: programmesProp,
+}: {
+  festivals?: NavItem[];
+  programmes?: NavItem[];
+} = {}) {
+  const festivals = festivalsProp ?? defaultFestivals;
+  const programmeItems = programmesProp ?? defaultProgrammes;
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeMega, setActiveMega] = useState<"festivals" | "programmes" | null>(null);

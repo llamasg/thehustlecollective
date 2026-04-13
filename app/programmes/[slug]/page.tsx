@@ -8,7 +8,7 @@ import {
   sanityImageUrl,
 } from "@/lib/sanity";
 import type { SanityEvent } from "@/lib/sanity";
-import Navbar from "@/components/layout/Navbar";
+import NavbarServer from "@/components/layout/NavbarServer";
 import Footer from "@/components/layout/Footer";
 import ProgrammePageContent from "@/components/programmes/ProgrammePageContent";
 import { type Programme } from "@/data/programmes";
@@ -106,7 +106,7 @@ export default async function ProgrammePage({
 
   return (
     <>
-      <Navbar />
+      <NavbarServer />
       <main>
         <ProgrammePageContent programme={programme} events={events} eventbriteUrl={eventbriteUrl} />
       </main>

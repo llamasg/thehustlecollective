@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Navbar from "@/components/layout/Navbar";
+import NavbarServer from "@/components/layout/NavbarServer";
 import Footer from "@/components/layout/Footer";
 import AnimatedReveal from "@/components/shared/AnimatedReveal";
 import StaggeredText from "@/components/shared/StaggeredText";
@@ -40,7 +40,7 @@ const festivals = [
 export default function WhatWeDoPage() {
   return (
     <>
-      <Navbar />
+      <NavbarServer />
       <main>
         {/* ── Hero Section ── */}
         <section className="relative min-h-[70vh] flex items-end bg-black overflow-hidden">
