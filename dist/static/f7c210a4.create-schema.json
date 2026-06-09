@@ -1,0 +1,990 @@
+[
+  {
+    "fields": [
+      {
+        "name": "h",
+        "type": "number",
+        "title": "Hue"
+      },
+      {
+        "name": "s",
+        "type": "number",
+        "title": "Saturation"
+      },
+      {
+        "name": "l",
+        "type": "number",
+        "title": "Lightness"
+      },
+      {
+        "name": "a",
+        "type": "number",
+        "title": "Alpha"
+      }
+    ],
+    "name": "hslaColor",
+    "type": "object",
+    "title": "Hue Saturation Lightness"
+  },
+  {
+    "fields": [
+      {
+        "name": "h",
+        "type": "number",
+        "title": "Hue"
+      },
+      {
+        "name": "s",
+        "type": "number",
+        "title": "Saturation"
+      },
+      {
+        "name": "v",
+        "type": "number",
+        "title": "Value"
+      },
+      {
+        "name": "a",
+        "type": "number",
+        "title": "Alpha"
+      }
+    ],
+    "name": "hsvaColor",
+    "type": "object",
+    "title": "Hue Saturation Value"
+  },
+  {
+    "fields": [
+      {
+        "name": "r",
+        "type": "number",
+        "title": "Red"
+      },
+      {
+        "name": "g",
+        "type": "number",
+        "title": "Green"
+      },
+      {
+        "name": "b",
+        "type": "number",
+        "title": "Blue"
+      },
+      {
+        "name": "a",
+        "type": "number",
+        "title": "Alpha"
+      }
+    ],
+    "name": "rgbaColor",
+    "type": "object",
+    "title": "Red Green Blue (rgb)"
+  },
+  {
+    "fields": [
+      {
+        "name": "hex",
+        "type": "string"
+      },
+      {
+        "name": "alpha",
+        "type": "number"
+      },
+      {
+        "name": "hsl",
+        "type": "hslaColor",
+        "title": "Hue Saturation Lightness"
+      },
+      {
+        "name": "hsv",
+        "type": "hsvaColor",
+        "title": "Hue Saturation Value"
+      },
+      {
+        "name": "rgb",
+        "type": "rgbaColor",
+        "title": "Red Green Blue (rgb)"
+      }
+    ],
+    "name": "color",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error",
+            "message": "A title is required"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error",
+            "message": "A slug is required"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "name": "publishedAt",
+        "type": "datetime"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Opportunity",
+              "value": "Opportunity"
+            },
+            {
+              "title": "News",
+              "value": "News"
+            },
+            {
+              "title": "Recap",
+              "value": "Recap"
+            },
+            {
+              "title": "Announcement",
+              "value": "Announcement"
+            }
+          ],
+          "layout": "radio"
+        },
+        "name": "category",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 200
+              }
+            ],
+            "level": "warning",
+            "message": "Excerpt should be 200 characters or fewer"
+          }
+        ],
+        "name": "excerpt",
+        "type": "text"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "fields": [
+          {
+            "description": "Brief description of the image for accessibility",
+            "name": "alt",
+            "type": "string",
+            "title": "Alt Text"
+          }
+        ],
+        "name": "mainImage",
+        "type": "image"
+      },
+      {
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "i18nTitleKey": "inputs.portable-text.annotation.link",
+                  "options": {
+                    "modal": {
+                      "type": "popover"
+                    }
+                  },
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/",
+                                    "/^tel$/",
+                                    "/^mailto$/"
+                                  ],
+                                  "allowRelative": true,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ],
+                          "level": "error"
+                        }
+                      ],
+                      "description": "A valid web, email, phone, or relative link.",
+                      "name": "href",
+                      "type": "url",
+                      "title": "Link"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                },
+                {
+                  "value": "code",
+                  "title": "Code"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                },
+                {
+                  "value": "strike-through",
+                  "title": "Strike"
+                }
+              ]
+            },
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bulleted list"
+              },
+              {
+                "value": "number",
+                "title": "Numbered list"
+              }
+            ],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "Heading 1"
+              },
+              {
+                "value": "h2",
+                "title": "Heading 2"
+              },
+              {
+                "value": "h3",
+                "title": "Heading 3"
+              },
+              {
+                "value": "h4",
+                "title": "Heading 4"
+              },
+              {
+                "value": "h5",
+                "title": "Heading 5"
+              },
+              {
+                "value": "h6",
+                "title": "Heading 6"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          },
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alt Text"
+              },
+              {
+                "name": "caption",
+                "type": "string"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "body",
+        "type": "array"
+      },
+      {
+        "name": "author",
+        "type": "string"
+      }
+    ],
+    "name": "blogPost",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "name",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "description": "Short subtitle shown below the title",
+        "name": "tagline",
+        "type": "string"
+      },
+      {
+        "description": "Uppercase one-liner for the hero",
+        "name": "descriptor",
+        "type": "string"
+      },
+      {
+        "description": "Date or year label shown on cards (e.g. \"2026\" or \"2022 - Present\")",
+        "name": "label",
+        "type": "string"
+      },
+      {
+        "initialValue": false,
+        "description": "Show as the featured hub card on the homepage",
+        "name": "featured",
+        "type": "boolean"
+      },
+      {
+        "initialValue": false,
+        "description": "If false, shows gallery-only mode",
+        "name": "hasContent",
+        "type": "boolean",
+        "title": "Has Editorial Content"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "fields": [
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alt Text"
+          }
+        ],
+        "name": "heroImage",
+        "type": "image"
+      },
+      {
+        "rows": 5,
+        "description": "Opening paragraph displayed large before sections",
+        "name": "intro",
+        "type": "text"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "rows": 10,
+                "description": "Paragraphs separated by blank lines",
+                "name": "body",
+                "type": "text"
+              }
+            ],
+            "type": "object",
+            "name": "section"
+          }
+        ],
+        "name": "sections",
+        "type": "array"
+      },
+      {
+        "rows": 3,
+        "description": "Highlighted quote displayed between sections",
+        "name": "pullQuote",
+        "type": "text"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "name": "role",
+                "type": "string"
+              }
+            ],
+            "type": "object",
+            "name": "speaker"
+          }
+        ],
+        "name": "speakers",
+        "type": "array",
+        "title": "Speakers / Guests"
+      },
+      {
+        "description": "Lineup items shown on the programme page with day tabs. Leave empty for programmes without a schedule.",
+        "of": [
+          {
+            "fields": [
+              {
+                "options": {
+                  "list": [
+                    {
+                      "title": "Saturday",
+                      "value": "Saturday"
+                    },
+                    {
+                      "title": "Sunday",
+                      "value": "Sunday"
+                    }
+                  ],
+                  "layout": "radio"
+                },
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "valid",
+                        "constraint": [
+                          "Saturday",
+                          "Sunday"
+                        ]
+                      },
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "day",
+                "type": "string"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "description": "e.g. \"10.00 - 11.00\"",
+                "name": "time",
+                "type": "string"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "options": {
+                  "list": [
+                    {
+                      "title": "Workshop",
+                      "value": "Workshop"
+                    },
+                    {
+                      "title": "Panel",
+                      "value": "Panel"
+                    },
+                    {
+                      "title": "Discussion",
+                      "value": "Discussion"
+                    },
+                    {
+                      "title": "1-1 Sessions",
+                      "value": "1-1 Sessions"
+                    }
+                  ]
+                },
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "valid",
+                        "constraint": [
+                          "Workshop",
+                          "Panel",
+                          "Discussion",
+                          "1-1 Sessions"
+                        ]
+                      },
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "type",
+                "type": "string"
+              },
+              {
+                "name": "host",
+                "type": "string"
+              },
+              {
+                "of": [
+                  {
+                    "fields": [
+                      {
+                        "validation": [
+                          {
+                            "rules": [
+                              {
+                                "flag": "presence",
+                                "constraint": "required"
+                              }
+                            ],
+                            "level": "error"
+                          }
+                        ],
+                        "name": "name",
+                        "type": "string"
+                      },
+                      {
+                        "name": "role",
+                        "type": "string"
+                      }
+                    ],
+                    "type": "object",
+                    "name": "panelist"
+                  }
+                ],
+                "name": "panelists",
+                "type": "array",
+                "title": "Panelists / Speakers"
+              },
+              {
+                "initialValue": false,
+                "name": "bookingRequired",
+                "type": "boolean"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "uri",
+                        "constraint": {
+                          "options": {
+                            "scheme": [
+                              "/^http$/",
+                              "/^https$/"
+                            ],
+                            "allowRelative": false,
+                            "relativeOnly": false,
+                            "allowCredentials": false
+                          }
+                        }
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "eventbriteUrl",
+                "type": "url",
+                "title": "Eventbrite URL"
+              }
+            ],
+            "type": "object",
+            "name": "scheduleEvent",
+            "title": "Event"
+          }
+        ],
+        "name": "events",
+        "type": "array",
+        "title": "Event Schedule"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Main booking link shown as CTA below the schedule",
+        "name": "eventbriteUrl",
+        "type": "url",
+        "title": "Eventbrite URL"
+      },
+      {
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alt Text"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "galleryImages",
+        "type": "array"
+      },
+      {
+        "initialValue": 10,
+        "description": "Lower numbers appear first",
+        "name": "order",
+        "type": "number",
+        "title": "Sort Order"
+      }
+    ],
+    "name": "programme",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "name",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "description": "Short subtitle (e.g. \"Nottingham's music & arts festival, all for charity\")",
+        "name": "tagline",
+        "type": "string"
+      },
+      {
+        "description": "The year the festival was founded",
+        "name": "established",
+        "type": "number",
+        "title": "Year Established"
+      },
+      {
+        "description": "Primary brand color used for headings, stats, and buttons",
+        "name": "accentColor",
+        "type": "color"
+      },
+      {
+        "description": "Light variant of the accent color",
+        "name": "accentColorLight",
+        "type": "color",
+        "title": "Accent Color (Light)"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "fields": [
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alt Text"
+          }
+        ],
+        "name": "heroImage",
+        "type": "image"
+      },
+      {
+        "rows": 5,
+        "description": "Opening paragraph displayed large at the top of the page",
+        "name": "intro",
+        "type": "text"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "rows": 10,
+                "description": "Paragraphs separated by blank lines",
+                "name": "body",
+                "type": "text"
+              }
+            ],
+            "type": "object",
+            "name": "festivalSection",
+            "title": "Section"
+          }
+        ],
+        "name": "sections",
+        "type": "array",
+        "title": "Editorial Sections"
+      },
+      {
+        "rows": 3,
+        "description": "Featured quote displayed between sections",
+        "name": "pullQuote",
+        "type": "text"
+      },
+      {
+        "description": "Key stats displayed in a grid (e.g. \"19\" / \"Years running\")",
+        "of": [
+          {
+            "fields": [
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "value",
+                "type": "string"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "label",
+                "type": "string"
+              }
+            ],
+            "type": "object",
+            "name": "stat",
+            "title": "Statistic"
+          }
+        ],
+        "name": "stats",
+        "type": "array",
+        "title": "Statistics"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Link to the festival website",
+        "name": "externalLink",
+        "type": "url",
+        "title": "External Website"
+      },
+      {
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alt Text"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "galleryImages",
+        "type": "array"
+      },
+      {
+        "initialValue": 10,
+        "description": "Lower numbers appear first (Hockley Hustle = 1, Green Hustle = 2, Young Hustlers = 3)",
+        "name": "order",
+        "type": "number",
+        "title": "Sort Order"
+      }
+    ],
+    "name": "festival",
+    "type": "document"
+  }
+]
