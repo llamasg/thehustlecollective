@@ -4,7 +4,6 @@ const navLinks = [
   { label: "Home", href: "/" },
   { label: "Festivals", href: "/festivals" },
   { label: "What We Do", href: "/what-we-do" },
-  { label: "Who We Are", href: "/who-we-are" },
   { label: "Blog", href: "/blog" },
   { label: "Get In Touch", href: "/get-in-touch" },
 ];
